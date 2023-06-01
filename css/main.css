@@ -1,7 +1,8 @@
 /* Timeline custom component */
 .timeline-card {
   position: relative;
-  margin-left: 16px; }
+  margin-left: 16px; 
+}
 
 .timeline-card:before {
   content: '';
@@ -14,35 +15,41 @@
   top: 16px;
   left: -12px;
   border: 5px solid;
-  z-index: 2; }
+  z-index: 2; 
+}
 
 .timeline-body {
-  border-left: 2px solid #E6E9ED; }
+  border-left: 2px solid #E6E9ED; 
+}
 
 .timeline-card-primary:before {
-  border-color: var(--bs-primary); }
+  border-color: var(--bs-primary); 
+}
 
 .timeline-card-info:before {
-  border-color: var(--bs-info); }
+  border-color: var(--bs-info); 
+}
 
 .timeline-card-secondary:before {
-  border-color: var(--bs-secondary); }
+  border-color: var(--bs-secondary); 
+}
 
 .timeline-card-success:before {
-  border-color: var(--bs-teal); }
+  border-color: var(--bs-teal); 
+}
 
 html {
-  scroll-behavior: smooth; }
+  scroll-behavior: smooth; 
+}
 
 html, body {
-  overflow-x: hidden; }
-
-.container {
-  max-width: 1140px; }
+  overflow-x: hidden; 
+}
 
 .site-title {
   font-size: 1.25rem;
-  line-height: 2.5rem; }
+  line-height: 2.5rem; 
+}
 
 .nav-link {
   padding: 0;
@@ -52,46 +59,58 @@ html, body {
   opacity: 0.8; }
 
 .header-social .nav-link {
-  font-size: 1.25rem; }
+  font-size: 1.25rem; 
+}
 
 .nav-link:hover,
 .nav-link:focus {
   color: inherit;
-  opacity: 1; }
+  opacity: 1; 
+}
 
 .nav-item + .nav-item {
-  margin-left: 1rem; }
+  margin-left: 1rem; 
+}
 
 .cover {
-  height: 500px; }
+  height: 500px; 
+}
 
 .cover > img {
   -o-object-fit: cover;
      object-fit: cover;
-  width: auto; }
+  width: auto; 
+}
 
 .progress-bar {
   text-transform: uppercase;
   font-size: 10px;
-  letter-spacing: 1px; }
+  letter-spacing: 1px; 
+}
 
 .text-small {
-  font-size: 0.85rem; }
+  font-size: 0.85rem; 
+}
 
 .text-teal {
-  color: var(--bs-teal); }
+  color: var(--bs-teal); 
+}
 
 footer a:not(.nav-link) {
   color: inherit;
   border-bottom: 1px dashed;
   text-decoration: none;
-  cursor: pointer; }
+  cursor: pointer; 
+}
 
 @media (min-width: 48em) {
   .site-title {
-    float: left; }
+    float: left; 
+  }
   .site-nav {
-    float: right; } }
+    float: right; 
+  } 
+}
 
 @media (max-width: 767px) {
   /* disable animations on mobile */
@@ -140,3 +159,31 @@ footer a:not(.nav-link) {
   .page-break {
     padding-top: 5rem;
     page-break-before: always; } }
+
+
+
+.container_projects {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+    
+.column {
+    flex-basis: 50%;
+    padding: 20px;
+}
+  
+.project {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+  
+.project img {
+    width: 50%;
+    margin-right: 20px;
+}
+  
+.description {
+    font-size: 17px;
+}
