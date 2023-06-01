@@ -64,16 +64,12 @@
                   <ul class="nav justify-content-center">
                     <li class="nav-item"><a class="nav-link" href="https://twitter.com/pouyaparsa2" title="Twitter"><i class="fab fa-twitter"></i><span class="menu-title sr-only">Twitter</span></a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#" title="Facebook"><i class="fab fa-facebook"></i><span class="menu-title sr-only">Facebook</span></a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="#" title="Instagram"><i class="fab fa-instagram"></i><span class="menu-title sr-only">Instagram</span></a>
-                    </li>
                     <li class="nav-item"><a class="nav-link" href="https://github.com/pouya-parsa" title="Github"><i class="fab fa-github"></i><span class="menu-title sr-only">Github</span></a>
                     </li>
                   </ul>
                 </nav>
               </div>
-              <div class="d-print-none"><a class="btn btn-outline-light btn-lg shadow-sm mt-1 me-3" href="#experience" data-aos="fade-right" data-aos-delay="700">MY CV</a><a class="btn btn-info btn-lg shadow-sm mt-1" href="https://github.com/pouya-parsa" data-aos="fade-left" data-aos-delay="700">My Github</a></div>
+              <div class="d-print-none"><a class="btn btn-outline-light btn-lg shadow-sm mt-1 me-3" href="./PouyaParsa_CV.pdf" data-aos="fade-right" data-aos-delay="700">MY CV</a><a class="btn btn-info btn-lg shadow-sm mt-1" href="https://github.com/pouya-parsa" data-aos="fade-left" data-aos-delay="700">My Github</a></div>
             </div>
           </div>
         </div>
@@ -143,7 +139,7 @@
             <div>
               <ul>
                 <li>I was a member of the R&D team responsible for developing recommender systems at MCI, Iran’s first
-                  and largest mobile operator with over 67 million users</li>
+                  and largest mobile operator with 67 million users</li>
                 <li>Created a fault-tolerant Extract, Transform, Load (ETL) system data preparation</li>
                 <li>Implemented a highly efficient collaborative filtering algorithm that provides suggested posts to a user
                   with response times of less than 10ms</li>
@@ -219,7 +215,7 @@
         <div class="column">
           <div class="project">
             <img src="./images/projects/last_frame.png" alt="Progressive GANs">
-            <p class="description">The mentioned model acts as a fundamental basis for various generative models like styleGAN, styleGAN2
+            <p class="description"><strong class="project_title">Progressive GANs</strong><br/>The mentioned model acts as a fundamental basis for various generative models like styleGAN, styleGAN2
               , and others. With the aim of enhancing my programming abilities and taking a preliminary step towards
               semantically editing GANs’ latent space, I personally implemented this research paper from scratch. The
               model underwent training for nearly two weeks on Google Colab. It progressively refines the learned details,
@@ -230,7 +226,7 @@
         <div class="column">
           <div class="project">
             <img src="./images/projects/AI_cup.png" alt="AI CUP">
-            <p class="description">The AI CUP is an international competition held annually. In this competition, you have control over one
+            <p class="description"><strong class="project_title">AI CUP</strong><br/>The AI CUP is an international competition held annually. In this competition, you have control over one
                 player, while your competitor has coded the actions for Player 2. Player 1 represents our own player. By
                 employing reinforcement learning, specifically a Deep Q Learning (DQN) agent, we achieved remarkable
                 results thanks to the inherent scalar reward system in games. This system measures the player’s health,
@@ -241,7 +237,7 @@
         <div class="column">
           <div class="project">
             <img src="./images/projects/vision_transformers.png" alt="Transformer-Based Stock Prediction">
-            <p class="description">During my Bachelor’s thesis, I initially acquainted myself with the stock market and its specific terminology, including various indicators, indexes, and strategies. Subsequently, a two-step classifier was developed
+            <p class="description"><strong class="project_title">Transformer-Based Stock Prediction</strong><br/>During my Bachelor’s thesis, I initially acquainted myself with the stock market and its specific terminology, including various indicators, indexes, and strategies. Subsequently, a two-step classifier was developed
               utilizing KNN and SVM, resulting in a notable 45% gain during back-testing in certain months of the year.
               To further explore possibilities, I ventured into incorporating the concept of vision transformers [2] into
               stock market prediction. Although this was an early exploration, it provided valuable insights and learning
@@ -252,7 +248,7 @@
         <div class="column">
           <div class="project">
             <img src="./images/projects/dehaze_in_one.png" alt="Dehazing by GANs">
-            <p class="description">The project utilizes Generative Adversarial Networks (GANs) and incorporates a combination of perceptual
+            <p class="description"><strong class="project_title">Dehazing by GANs</strong><br/>The project utilizes Generative Adversarial Networks (GANs) and incorporates a combination of perceptual
               loss and reconstruction loss to enhance convergence speed and image quality. The model has been trained on the O-Hazy dataset, which comprises a limited number (45) of groundlevel images. This dataset includes both hazy and non-hazy images from a specific scene. To overcome the
               hunger for data challenges faced by GANs, we employ an innovative data augmentation technique.</p>
           </div>
@@ -261,7 +257,7 @@
         <div class="column">
           <div class="project">
             <img src="./images/projects/heart_rate.png" alt="Heart Rate Measurement From Video">
-            <p class="description">My curiosity regarding the accuracy of non-contact heartbeat detection drives this project. Instead of relying on learning-based methods, I employ signal processing techniques
+            <p class="description"><strong class="project_title">Heart Rate Measurement From Video</strong><br/>My curiosity regarding the accuracy of non-contact heartbeat detection drives this project. Instead of relying on learning-based methods, I employ signal processing techniques
               to explore this topic. To evaluate the effectiveness of these techniques, I conduct experiments on the DEAP
               dataset. The process involves detecting the person’s face, extracting Regions of Interest (RoIs), and applying techniques such as detrending, hamming, and normalization. Heart rate extraction is then performed
               using various methods, including Fast Fourier Transform (FFT), Independent Component Analysis (ICA),
@@ -273,21 +269,21 @@
         <div class="column">
           <div class="project">
             <img src="./images/projects/demo_pose_classificaiton.png" alt="Pose Classification">
-            <p class="description">The project employs the R-CNN model, utilizing a ResNet-50-FPN backbone. Due to the pose estimation
+            <p class="description"><strong class="project_title">Pose Classification</strong><br/>The project employs the R-CNN model, utilizing a ResNet-50-FPN backbone. Due to the pose estimation
               model’s tendency to produce false positives, a well-known object detection model called Yolo5 has been
               incorporated to improve predictions as a post-processing step. An online demo showcasing the application
               of pose classification in identifying hazardous positions of workers in construction sectors is accessible via
-              the provided link.</p>
+              <a href="http://ec2-3-144-209-167.us-east-2.compute.amazonaws.com:8052/">this link</a>.</p>
           </div>
         </div>
 
         <div class="column">
           <div class="project">
             <img src="./images/projects/large_language_models.png" alt="Software Requirement Eliciation">
-            <p class="description">Expressing the desired functionalities of an application in a programmer-friendly language often poses a
+            <p class="description"><strong class="project_title">Software Requirement Eliciation</strong><br/>Expressing the desired functionalities of an application in a programmer-friendly language often poses a
               challenge for users. One approach to address this issue is to analyze and extract developer-oriented features
               from everyday communication platforms such as Twitter. In this demonstration, the process involves generating sample tweets related to a specific topic using a powerful language model like GPT3.5, followed by
-              an attempt to articulate the features in more technical terms using GPT3.5 once again.</p>
+              an attempt to articulate the features in more technical terms using GPT3.5 once again. (<a href="http://ec2-3-144-209-167.us-east-2.compute.amazonaws.com:8051/">link to the demo</a>)</p>
           </div>
         </div>
 

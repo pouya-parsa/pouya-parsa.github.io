@@ -187,3 +187,8 @@ footer a:not(.nav-link) {
 .description {
     font-size: 17px;
 }
+
+.project_title {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
