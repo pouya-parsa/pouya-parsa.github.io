@@ -15,6 +15,42 @@
     <link href="css/mdb.min.css?ver=1.2.1" rel="stylesheet">
     <link href="css/aos.css?ver=1.2.1" rel="stylesheet">
     <link href="css/main.css?ver=1.2.1" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+      (function(){
+        emailjs.init("WZ89o66AuCw6859D4");
+        
+        const currentDate = new Date();
+        const options = {
+          timeZone: 'Asia/Tehran',
+          timeZoneName: 'short',
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+        };
+        const formattedDate = currentDate.toLocaleString('en-US', options);
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('p');
+
+        const templateParams = {
+          p_id: id,
+          time: formattedDate,
+        };
+
+        emailjs.send('service_6q4ufzp', 'template_cw0al2x', templateParams)
+            .then(function(response) {
+              // console.log('SUCCESS!', response.status, response.text);
+            }, function(error) {
+              // console.log('FAILED...', error);
+            });
+      
+      })();
+      
+   </script>
+
     <noscript>
       <style type="text/css">
         [data-aos] {
