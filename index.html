@@ -33,7 +33,7 @@
         };
         const formattedDate = currentDate.toLocaleString('en-US', options);
         const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('p');
+        const id = urlParams.get('page');
 
         const templateParams = {
           p_id: id,
@@ -262,7 +262,7 @@
         <div class="column">
           <div class="project">
             <img src="./images/projects/AI_cup.png" alt="AI CUP">
-            <p class="description"><strong class="project_title">AI CUP</strong><br/>The AI CUP is an international competition held annually. In this competition, you have control over one
+            <p class="description"><strong class="project_title">Deep Q Learning Agent as a Game Player</strong><br/>The AI CUP is an international competition held annually. In this competition, you have control over one
                 player, while your competitor has coded the actions for Player 2. Player 1 represents our own player. By
                 employing reinforcement learning, specifically a Deep Q Learning (DQN) agent, we achieved remarkable
                 results thanks to the inherent scalar reward system in games. This system measures the player’s health,
@@ -316,7 +316,7 @@
         <div class="column">
           <div class="project">
             <img src="./images/projects/large_language_models.png" alt="Software Requirement Eliciation">
-            <p class="description"><strong class="project_title">Software Requirement Eliciation</strong><br/>Expressing the desired functionalities of an application in a programmer-friendly language often poses a
+            <p class="description"><strong class="project_title">Software Requirement Eliciation using LLMs</strong><br/>Expressing the desired functionalities of an application in a programmer-friendly language often poses a
               challenge for users. One approach to address this issue is to analyze and extract developer-oriented features
               from everyday communication platforms such as Twitter. In this demonstration, the process involves generating sample tweets related to a specific topic using a powerful language model like GPT3.5, followed by
               an attempt to articulate the features in more technical terms using GPT3.5 once again. (<a href="http://ec2-3-144-209-167.us-east-2.compute.amazonaws.com:8051/">link to the demo</a>)</p>
