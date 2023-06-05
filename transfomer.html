@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pouya Parsa</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&amp;family=Roboto:wght@300;400;500;700&amp;display=swap"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&amp;family=Roboto:wght@300;400;500;700&amp;display=swap" media="print" onload="this.media='all'"/>
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&amp;family=Roboto:wght@300;400;500;700&amp;display=swap"/>
+    </noscript>
+    <link href="css/font-awesome/css/all.min.css?ver=1.2.1" rel="stylesheet">
+    <link href="css/transformer.css" rel="stylesheet">
+    <link href="css/mdb.min.css?ver=1.2.1" rel="stylesheet">
+    <link href="css/aos.css?ver=1.2.1" rel="stylesheet">
+    <link href="css/main.css?ver=1.2.1" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="text/javascript">
+      // (function(){
+      //   emailjs.init("WZ89o66AuCw6859D4");
+        
+      //   const currentDate = new Date();
+      //   const options = {
+      //     timeZone: 'Asia/Tehran',
+      //     timeZoneName: 'short',
+      //     day: 'numeric',
+      //     month: 'short',
+      //     year: 'numeric',
+      //     hour: 'numeric',
+      //     minute: 'numeric',
+      //     second: 'numeric',
+      //   };
+      //   const formattedDate = currentDate.toLocaleString('en-US', options);
+      //   const urlParams = new URLSearchParams(window.location.search);
+      //   const id = urlParams.get('page');
+
+      //   const templateParams = {
+      //     p_id: id,
+      //     time: formattedDate,
+      //   };
+
+      //   emailjs.send('service_6q4ufzp', 'template_cw0al2x', templateParams)
+      //       .then(function(response) {
+      //         // console.log('SUCCESS!', response.status, response.text);
+      //       }, function(error) {
+      //         // console.log('FAILED...', error);
+      //       });
+      
+      // })();
+      
+   </script>
+
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+
+    <noscript>
+      <style type="text/css">
+        [data-aos] {
+            opacity: 1 !important;
+            transform: translate(0) scale(1) !important;
+        }
+      </style>
+    </noscript>
+  </head>
+  <body class="bg-light" id="top">
+    <header class="d-print-none">
+      <div class="container text-center text-lg-left">
+        <div class="pt-4 clearfix">
+          <h1 class="site-title mb-0">Pouya Parsa</h1>
+          <div class="site-nav"> 
+            <nav role="navigation">
+              <ul class="nav justify-content-center">
+                <li class="nav-item"><a class="nav-link" href="./index.html#education" title="Education"><span class="menu-title">Education</span></a>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="./index.html#experience" title="Experience"><span class="menu-title">Experience</span></a>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="./index.html#projects" title="Projects"><span class="menu-title">Projects</span></a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="page-content">
+      <div class="container">
+<div class="resume-container">
+ 
+
+  <div class="shadow-1-strong bg-white my-5 p-5" id="education">
+    <div class="education-section">
+      <h2>Transformer Encoder for Language Modeling</h2>
+      <p>
+        Attention is all you need is an old paper today, however, 
+        it’s still the state-of-the-art architecture and is the basis of
+        2023 state-of-the-art models in NLP, computer vision. Although the original paper is
+        considered an old paper by the machine learning standards, I was reviewing the paper and I
+        think there are a bunch of questions that have not been addressed in the way I wanted. So,
+        I tried to implement it once again, to understand exactly how certain parts work.
+      </p>
+      <h3>What is the reason behind the widespread adoption of transformers?</h3>
+      <p>
+        Transformers have gained prominence as a result of addressing the limitations of previous approaches 
+        to language modeling, namely Word2Vec and RNNs. Word2Vec suffers from assigning a fixed vector to 
+        each word without considering its contextual dependencies. On the other hand, RNNs were
+        slow and unidirectional, focusing solely on the words preceding a particular word.
+        In contrast, transformers are bi-directional and, despite their O(N^2) complexity, modern hardware
+        allows for fast parallel computations. Crucially, transformers vectorize words based on
+        their surrounding context, meaning that the same word can have different representations in different sentences.
+      </p>
+      <p>
+        The code provided here is intended solely for explanatory purposes and is not suitable for production use.
+      </p>
+      <h3>Positional Embedding</h3>
+      <p>
+        I came across the statement that transformers lack an understanding of 
+        word order, but I remained unconvinced. The explanation appeared too vague to me.
+        However, upon examining the input of the transformer encoder, 
+        it becomes apparent that each word does not possess knowledge of its specific location.
+        To elaborate further, when attention scores are computed for a word, it does not consider
+        the words preceding or succeeding it. Its awareness is limited to the fact that these
+        N words are collectively present. To address this issue, a positional value representing
+        the position of each word within the sentence is added to its embedding. 
+        As a result, during the multiplication step, it becomes evident whether the word W appears after or before word X.
+      </p>
+      $$PE_{(pos,2i)} = \sin\left(\frac{{pos}}{{10000^{(2i/d_{\text{{model}}})}}}\right)$$
+
+      $$PE_{(pos,2i+1)} = \cos\left(\frac{{pos}}{{10000^{(2i/d_{\text{{model}}})}}}\right)$$
+
+      <script src="https://gist.github.com/pouya-parsa/11545eee0583782c9e6dc94f7fb07791.js"></script>
+      <p>
+        It is worth noting that the positional embedding remains consistent for all input instances, 
+        effectively serving as a constant value throughout the training process. 
+        When approaching the vectorization aspect, I typically begin by implementing the 
+        for-loop version before attempting to optimize it for vectorized computations. 
+        Which is named “generate_positional_embedding_nv” in the class below.
+      </p>
+      
+      <p>
+        Now, let's proceed with performing the task in vector format. 
+        We simply create a matrix with dimensions corresponding to the 
+        maximum sequence length and the embedding dimension. 
+        This matrix consists of two components: one for positions and another for indexes. 
+        To illustrate this further, consider that the word located at position 
+        "pos" has 512 dimensions (indices). By employing this approach, it becomes evident 
+        that since we are executing the same procedure for all rows of the matrix, we can leverage 
+        the parallelization capabilities inherent in hardware to significantly accelerate the computation process.
+      </p>
+
+      <h3>Embedding Layer</h3>
+      <p>
+        The embedding layer bears resemblance to the concept introduced by Word2Vec. 
+        It takes a word as input and provides a non-contextualized vector representation of the word, 
+        which, in this case, comprises dimensions of 512.
+      </p>
+      <script src="https://gist.github.com/pouya-parsa/c71eea06836463fd81df3898e5c16ac2.js"></script>
+
+      <h3>Attention Head</h3>
+      <p>
+        Next, we have the attention head, which takes a sentence as input and generates a 
+        contextualized vector representation for each word. It achieves this by computing a 
+        weighted sum of the word representations in its vicinity, thereby producing a context-aware representation. 
+        Essentially, attention operates as a weighted sum, albeit in a less intuitive manner, in my opinion.
+         To explain further, consider the word for which we are seeking its representation as the query token, 
+         while the other tokens serve as the key tokens. By calculating the similarity between the key tokens and 
+         the query token, attention scores are determined. These attention scores are subsequently multiplied by 
+         the value tokens, which correspond to the original non-contextualized tokens. 
+         The formula for this process is as follows:
+      </p>
+      $$ \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V $$
+
+      <p>And the code for it:</p>
+      <script src="https://gist.github.com/pouya-parsa/6d2f3b0d80111429614ac1ef3cf5e1ce.js"></script>
+
+      <h3>Multi-Head Attention</h3>
+      <p>
+        Just as CNNs employ multiple filters within a layer, in multi-head attention, we have the ability to incorporate 
+        multiple heads, each of which can potentially specialize in different tasks such as part-of-speech detection or
+         topic identification.
+        To ensure computational feasibility, the authors introduce a linear model that projects the 
+        non-contextualized embeddings into a smaller space, specifically 64 dimensions in this instance. 
+        With the presence of 8 heads, we end up with 8 sets of these 64-dimensional embeddings for each word. 
+        These embeddings are then concatenated to form a final output dimension of 512, which ultimately maintains 
+        the same output shape as a single head configuration.
+      </p>
+      <script src="https://gist.github.com/pouya-parsa/10564ff280f7d53bcb9ad1d1df0d908c.js"></script>
+      <p>Now, we can create a layer of the transfomer encoder as follows:</p>
+      <script src="https://gist.github.com/pouya-parsa/ee91b0e0af2882cdb5a04756e3f0012c.js"></script>
+
+      <p>
+        Certain components, such as a feed-forward network and layer normalization, are utilized in the implementation,
+        which can be easily incorporated as shown. The example below illustrates a single layer of a transformer encoder.
+        It is worth mentioning that in the original paper, the authors stacked a total of 6 transformer layers on 
+        top of one another.    
+      </p>
+      <script src="https://gist.github.com/pouya-parsa/fd574f89bd98dfd65af16df517991f3c.js"></script>
+
+      <p>
+        What makes the transformer encoder intriguing is its applicability to language modeling. 
+        Unstructured text data is abundant, with Wikipedia serving as a prime example. 
+        By leveraging this wealth of unsupervised data, we can transform it into a supervised 
+        setting by providing the model with a sentence and tasking it with predicting a specific
+        word from that sentence. The representations learned through this process can subsequently be
+        employed for various downstream tasks such as language translation and question answering.
+        <br/>
+        To achieve this objective, we simply introduce a linear layer within the transformer that generates
+        a probability distribution over the vocabulary for the mask token. We can then utilize cross-entropy
+        as a means of gradient descent to train our model. It is worth noting that in this process, 
+        we only need to consider the embedding for a single word since, after several transformer layers,
+        each embedding becomes cognizant of the entire contextual information.
+        <script src="https://gist.github.com/pouya-parsa/77cb8777116f7f463bbf07790b7c189f.js"></script>
+        In order to assess the performance of the model, I conducted a training session for a
+        duration of only 30 minutes. Subsequently, I plotted both the training loss and the
+        validation loss, and the results appear promising. I will provide the code for the training process shortly.
+      </p>
+
+      <div class="image-container">
+        <figure>
+          <img src="./images/transformer/train_loss.png" alt="Image 1">
+          <figcaption>Training Loss</figcaption>
+        </figure>
+        <figure>
+          <img src="./images/transformer/val_loss.png" alt="Image 2">
+          <figcaption>Validation Loss</figcaption>
+        </figure>
+      </div>
+    
+    </div>
+  </div>
+  
+
+</div>
+</div>
+    </div>
+    <footer class="pt-4 pb-4 text-muted text-center d-print-none">
+      <div class="container">
+        <div class="my-3">
+          <div class="h4">Pouya Parsa</div>
+        </div>
+        <div class="text-small">
+          <div class="mb-1">&copy; Pouya Parsa. All rights reserved.</div>
+          <div>Design - <a href="https://templateflip.com/" target="_blank">TemplateFlip</a></div>
+        </div>
+      </div>
+    </footer>
+    <script src="scripts/mdb.min.js?ver=1.2.1"></script>
+    <script src="scripts/aos.js?ver=1.2.1"></script>
+    <script src="scripts/main.js?ver=1.2.1"></script>
+  </body>
+</html>
