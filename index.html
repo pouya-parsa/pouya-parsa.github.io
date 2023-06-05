@@ -18,35 +18,35 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
       (function(){
-        emailjs.init("WZ89o66AuCw6859D4");
+        // emailjs.init("WZ89o66AuCw6859D4");
         
-        const currentDate = new Date();
-        const options = {
-          timeZone: 'Asia/Tehran',
-          timeZoneName: 'short',
-          day: 'numeric',
-          month: 'short',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric',
-          second: 'numeric',
-        };
-        const formattedDate = currentDate.toLocaleString('en-US', options);
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('page');
+        // const currentDate = new Date();
+        // const options = {
+        //   timeZone: 'Asia/Tehran',
+        //   timeZoneName: 'short',
+        //   day: 'numeric',
+        //   month: 'short',
+        //   year: 'numeric',
+        //   hour: 'numeric',
+        //   minute: 'numeric',
+        //   second: 'numeric',
+        // };
+        // const formattedDate = currentDate.toLocaleString('en-US', options);
+        // const urlParams = new URLSearchParams(window.location.search);
+        // const id = urlParams.get('page');
 
-        const templateParams = {
-          p_id: id,
-          time: formattedDate,
-        };
+        // const templateParams = {
+        //   p_id: id,
+        //   time: formattedDate,
+        // };
 
-        emailjs.send('service_6q4ufzp', 'template_cw0al2x', templateParams)
-            .then(function(response) {
-              // console.log('SUCCESS!', response.status, response.text);
-            }, function(error) {
-              // console.log('FAILED...', error);
-            });
-      
+        // emailjs.send('service_6q4ufzp', 'template_cw0al2x', templateParams)
+        //     .then(function(response) {
+        //       // console.log('SUCCESS!', response.status, response.text);
+        //     }, function(error) {
+        //       // console.log('FAILED...', error);
+        //     });
+
       })();
       
    </script>
@@ -250,6 +250,20 @@
         
         <div class="column">
           <div class="project">
+            <img src="./images/projects/transformer.png" alt="Progressive GANs">
+            <p class="description"><strong class="project_title"><a id="transfomer_link" href="#">Transformer Encoder for Language Modeling</a></strong><br/>
+              What makes the transformer encoder intriguing is its applicability to language modeling. 
+              Unstructured text data is abundant, with Wikipedia serving as a prime example.
+              By leveraging this wealth of unsupervised data, we can transform it into a supervised setting
+              by providing the model with a sentence and tasking it with predicting a specific word from that sentence. 
+              The representations learned through this process can subsequently be employed for various downstream tasks 
+              such as language translation and question answering.  
+            </p>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="project">
             <img src="./images/projects/last_frame.png" alt="Progressive GANs">
             <p class="description"><strong class="project_title">Progressive GANs</strong><br/>The mentioned model acts as a fundamental basis for various generative models like styleGAN, styleGAN2
               , and others. With the aim of enhancing my programming abilities and taking a preliminary step towards
@@ -344,5 +358,13 @@
     <script src="scripts/mdb.min.js?ver=1.2.1"></script>
     <script src="scripts/aos.js?ver=1.2.1"></script>
     <script src="scripts/main.js?ver=1.2.1"></script>
+    <script>
+      (function(){
+        var link = document.getElementById("transfomer_link");
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('page');
+        link.href = "transfomer.html?page=" + id;
+      })()
+    </script>
   </body>
-</html>
+  </html>
