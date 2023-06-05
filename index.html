@@ -18,34 +18,34 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
       (function(){
-        // emailjs.init("WZ89o66AuCw6859D4");
+        emailjs.init("WZ89o66AuCw6859D4");
         
-        // const currentDate = new Date();
-        // const options = {
-        //   timeZone: 'Asia/Tehran',
-        //   timeZoneName: 'short',
-        //   day: 'numeric',
-        //   month: 'short',
-        //   year: 'numeric',
-        //   hour: 'numeric',
-        //   minute: 'numeric',
-        //   second: 'numeric',
-        // };
-        // const formattedDate = currentDate.toLocaleString('en-US', options);
-        // const urlParams = new URLSearchParams(window.location.search);
-        // const id = urlParams.get('page');
+        const currentDate = new Date();
+        const options = {
+          timeZone: 'Asia/Tehran',
+          timeZoneName: 'short',
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+        };
+        const formattedDate = currentDate.toLocaleString('en-US', options);
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('page');
 
-        // const templateParams = {
-        //   p_id: id,
-        //   time: formattedDate,
-        // };
+        const templateParams = {
+          p_id: id,
+          time: formattedDate,
+        };
 
-        // emailjs.send('service_6q4ufzp', 'template_cw0al2x', templateParams)
-        //     .then(function(response) {
-        //       // console.log('SUCCESS!', response.status, response.text);
-        //     }, function(error) {
-        //       // console.log('FAILED...', error);
-        //     });
+        emailjs.send('service_6q4ufzp', 'template_cw0al2x', templateParams)
+            .then(function(response) {
+              // console.log('SUCCESS!', response.status, response.text);
+            }, function(error) {
+              // console.log('FAILED...', error);
+            });
 
       })();
       
