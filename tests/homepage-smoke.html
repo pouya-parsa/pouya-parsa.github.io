@@ -1,0 +1,42 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Homepage Smoke Test</title>
+<script>
+  async function run() {
+    const html = await fetch("../index.html").then((response) => response.text());
+    const doc = new DOMParser().parseFromString(html, "text/html");
+
+    const failures = [];
+    const text = doc.body.textContent || "";
+
+    if (doc.title !== "Pouya Parsa") failures.push("Expected title to be Pouya Parsa");
+    if (!doc.querySelector('link[href="css/main.css"]')) failures.push("Expected css/main.css stylesheet link");
+    if (!doc.querySelector('img[src="profile_image.png"]')) failures.push("Expected profile_image.png portrait");
+    if (!doc.querySelector('a[href="mailto:parsa025@umn.edu"]')) failures.push("Expected email link");
+    if (!doc.querySelector('a[href="https://github.com/pouya-parsa"]')) failures.push("Expected GitHub link");
+    if (!doc.querySelector('a[href="PouyaParsa_CV.pdf"]')) failures.push("Expected CV PDF link");
+
+    for (const id of ["about", "news", "publications", "awards", "education", "experience"]) {
+      if (!doc.getElementById(id)) failures.push(`Expected #${id} section`);
+    }
+
+    if (!text.includes("Video-based Vehicle Surveillance in the Wild")) failures.push("Expected first publication title");
+    if (!text.includes("Where2Start")) failures.push("Expected second publication title");
+
+    const excludedTerm = ["trans", "portation"].join("");
+    if (text.toLowerCase().includes(excludedTerm)) failures.push("Homepage copy includes an excluded domain term");
+
+    const output = document.getElementById("output");
+    if (failures.length) {
+      output.textContent = failures.join("\n");
+      output.style.color = "red";
+      throw new Error(failures.join("; "));
+    }
+
+    output.textContent = "PASS";
+    output.style.color = "green";
+  }
+
+  window.addEventListener("load", run);
+</script>
+<pre id="output">Running...</pre>
