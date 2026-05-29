@@ -178,7 +178,7 @@ Use semantic HTML with:
           <article>
             <h3>University of Minnesota Twin Cities</h3>
             <p class="meta">Master of Science, 2024-2026</p>
-            <p>GPA: 3.7/4.00. Selected courses: Computer Vision, Traffic Flow Theory, Generative AI.</p>
+            <p>GPA: 3.7/4.00. Selected courses: Computer Vision and Generative AI.</p>
           </article>
           <article>
             <h3>Amirkabir University of Technology (Tehran Polytechnic)</h3>
@@ -191,12 +191,12 @@ Use semantic HTML with:
           <h2>Experience</h2>
           <article>
             <h3>Research Assistant, University of Minnesota</h3>
-            <p class="meta">Minneapolis, USA · Aug 2024-Present</p>
+            <p class="meta">Minneapolis, USA &middot; Aug 2024-Present</p>
             <p>Advisor: Dr. Seongjin Choi. Conducting research in machine learning with a focus on computer vision and generative AI.</p>
           </article>
           <article>
             <h3>Project Manager, XTON</h3>
-            <p class="meta">Remote (Dubai) · Apr 2024-Jul 2024</p>
+            <p class="meta">Remote (Dubai) &middot; Apr 2024-Jul 2024</p>
             <ul>
               <li>Managed infrastructure for a high-availability crypto clicker app serving 500k+ users.</li>
               <li>Implemented serverless architecture leveraging AWS Lambda and auto-scaling.</li>
@@ -205,7 +205,7 @@ Use semantic HTML with:
           </article>
           <article>
             <h3>Machine Learning Engineer, ZebraCat.ai</h3>
-            <p class="meta">Remote (Germany) · Sep 2022-Mar 2023</p>
+            <p class="meta">Remote (Germany) &middot; Sep 2022-Mar 2023</p>
             <ul>
               <li>Developed an embedding-based algorithm for efficient video retrieval.</li>
               <li>Developed a model to divide videos into semantic sections.</li>
@@ -214,7 +214,7 @@ Use semantic HTML with:
           </article>
           <article>
             <h3>Data Science Intern, MCI (Hamrahe Aval)</h3>
-            <p class="meta">Tehran, Iran · Jul 2022-Sep 2022</p>
+            <p class="meta">Tehran, Iran &middot; Jul 2022-Sep 2022</p>
             <ul>
               <li>Contributed to recommender systems at Iran's largest mobile operator.</li>
               <li>Built a fault-tolerant ETL pipeline for recommender data preparation.</li>
@@ -223,7 +223,7 @@ Use semantic HTML with:
           </article>
           <article>
             <h3>Machine Learning Engineer Intern, University of Zurich</h3>
-            <p class="meta">Zurich, Switzerland · Jan 2022-Mar 2022</p>
+            <p class="meta">Zurich, Switzerland &middot; Jan 2022-Mar 2022</p>
             <p>Developed software interfaces for data ingestion, preprocessing, machine learning, visualization, and report generation.</p>
           </article>
         </section>
