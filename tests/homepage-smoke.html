@@ -13,6 +13,7 @@
     if (!doc.querySelector('link[href="css/main.css"]')) failures.push("Expected css/main.css stylesheet link");
     if (!doc.querySelector('img[src="profile_image.png"]')) failures.push("Expected profile_image.png portrait");
     if (!doc.querySelector('a[href="mailto:parsa025@umn.edu"]')) failures.push("Expected email link");
+    if (doc.querySelector('a[href^="tel:"]')) failures.push("Expected no phone link");
     if (!doc.querySelector('a[href="https://github.com/pouya-parsa"]')) failures.push("Expected GitHub link");
     if (!doc.querySelector('a[href="PouyaParsa_CV.pdf"]')) failures.push("Expected CV PDF link");
 
@@ -23,6 +24,8 @@
     if (!text.includes("Video-based Vehicle Surveillance in the Wild")) failures.push("Expected first publication title");
     if (!text.includes("Where2Start")) failures.push("Expected second publication title");
     if (!text.includes("LLM memory")) failures.push("Expected LLM memory focus in homepage copy");
+    const profileText = doc.querySelector(".profile-links")?.textContent || "";
+    if (/\+\d\s\d{3}\s\d{3}\s\d{4}/.test(profileText)) failures.push("Expected no visible phone number");
 
     const excludedTerm = ["trans", "portation"].join("");
     if (text.toLowerCase().includes(excludedTerm)) failures.push("Homepage copy includes an excluded domain term");
