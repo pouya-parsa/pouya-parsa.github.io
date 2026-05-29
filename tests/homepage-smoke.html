@@ -22,6 +22,7 @@
 
     if (!text.includes("Video-based Vehicle Surveillance in the Wild")) failures.push("Expected first publication title");
     if (!text.includes("Where2Start")) failures.push("Expected second publication title");
+    if (!text.includes("LLM memory")) failures.push("Expected LLM memory focus in homepage copy");
 
     const excludedTerm = ["trans", "portation"].join("");
     if (text.toLowerCase().includes(excludedTerm)) failures.push("Homepage copy includes an excluded domain term");
