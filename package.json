@@ -1,0 +1,22 @@
+{
+  "name": "pouya-parsa-site-monitor",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.js tests/*.test.mjs",
+    "monitor:site": "node scripts/site-audit.mjs",
+    "monitor:lighthouse:collect": "lhci collect --config=lighthouserc.cjs",
+    "monitor:lighthouse:assert": "lhci assert --config=lighthouserc.cjs",
+    "monitor:lighthouse:upload": "lhci upload --config=lighthouserc.cjs",
+    "monitor:lighthouse:summary": "node scripts/lighthouse-summary.mjs"
+  },
+  "dependencies": {
+    "cheerio": "1.2.0",
+    "robots-parser": "3.0.1"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.15.1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

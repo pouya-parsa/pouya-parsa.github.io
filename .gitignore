@@ -2,3 +2,6 @@ test.html
 test.css
 .superpowers/
 .worktrees/
+node_modules/
+.monitoring/
+.lighthouseci/
