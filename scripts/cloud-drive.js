@@ -1,6 +1,11 @@
 (() => {
   "use strict";
 
+  document.documentElement.classList.add("has-js");
+  initFigureFilters();
+  initFigureDialog();
+  initCitationCopy();
+
   const model = globalThis.CloudDriveModel;
   const form = document.querySelector("#scenario-form");
   const resultRegion = document.querySelector("#scenario-result");
@@ -30,6 +35,117 @@
     currency: "USD",
     maximumFractionDigits: 0,
   });
+
+  function initFigureFilters() {
+    const buttons = Array.from(
+      document.querySelectorAll(".figure-filters [data-filter]")
+    );
+    const figures = Array.from(document.querySelectorAll(".figure-card"));
+    const status = document.querySelector("#figure-filter-status");
+
+    if (!buttons.length || !figures.length) return;
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const filter = button.dataset.filter;
+        let visibleCount = 0;
+
+        buttons.forEach((candidate) => {
+          candidate.setAttribute(
+            "aria-pressed",
+            String(candidate === button)
+          );
+        });
+
+        figures.forEach((figure) => {
+          const categories = (figure.dataset.category || "").split(" ");
+          const visible = filter === "all" || categories.includes(filter);
+          figure.hidden = !visible;
+          if (visible) visibleCount += 1;
+        });
+
+        if (status) {
+          status.textContent =
+            filter === "all"
+              ? `Showing all ${visibleCount} figures.`
+              : `Showing ${visibleCount} ${filter} figure${visibleCount === 1 ? "" : "s"}.`;
+        }
+      });
+    });
+  }
+
+  function initFigureDialog() {
+    const dialog = document.querySelector("#figure-dialog");
+    const closeButton = document.querySelector("#figure-dialog-close");
+    const title = document.querySelector("#figure-dialog-title");
+    const dialogImage = document.querySelector("#figure-dialog-image");
+    const dialogCaption = document.querySelector("#figure-dialog-caption");
+    const triggers = Array.from(document.querySelectorAll("[data-enlarge]"));
+    let launchButton = null;
+
+    if (!dialog || !closeButton || !title || !dialogImage || !dialogCaption) {
+      return;
+    }
+
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        const figure = trigger.closest(".figure-card");
+        const image = figure && figure.querySelector("img");
+        const caption = figure && figure.querySelector("figcaption");
+        if (!figure || !image || !caption) return;
+
+        if (typeof dialog.showModal !== "function") {
+          window.open(image.src, "_blank", "noopener");
+          return;
+        }
+
+        launchButton = trigger;
+        title.textContent = `Figure ${figure.id.replace("figure-", "")}`;
+        dialogImage.src = image.src;
+        dialogImage.alt = image.alt;
+        dialogCaption.textContent = caption.textContent.trim();
+        dialog.showModal();
+      });
+    });
+
+    closeButton.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("close", () => {
+      dialogImage.removeAttribute("src");
+      if (launchButton) launchButton.focus();
+    });
+  }
+
+  function initCitationCopy() {
+    const button = document.querySelector("#copy-citation");
+    const citation = document.querySelector("#bibtex");
+    const status = document.querySelector("#citation-status");
+    if (!button || !citation || !status) return;
+
+    button.addEventListener("click", async () => {
+      const citationText = citation.textContent.trim();
+
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(citationText);
+        } else {
+          const range = document.createRange();
+          const selection = window.getSelection();
+          range.selectNodeContents(citation);
+          selection.removeAllRanges();
+          selection.addRange(range);
+          if (!document.execCommand("copy")) throw new Error("Copy failed");
+          selection.removeAllRanges();
+        }
+        status.textContent = "Citation copied.";
+      } catch {
+        status.textContent =
+          "Select the BibTeX text and copy it manually.";
+      }
+    });
+  }
 
   function readScenario() {
     const data = new FormData(form);

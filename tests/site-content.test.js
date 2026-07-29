@@ -100,3 +100,34 @@ test("interactive controller contains no inline scientific constants", () => {
   assert.doesNotMatch(controller, /2_200_000|8_500|5600|1500/);
   assert.match(controller, /CloudDriveModel\.evaluateScenario/);
 });
+
+test("figure explorer and citation controls have accessible fallbacks", () => {
+  const html = read("cloud-drive/index.html");
+  assert.match(html, /role="group" aria-label="Filter paper figures"/);
+  for (const filter of [
+    "all",
+    "framework",
+    "communication",
+    "compute",
+    "cost",
+  ]) {
+    assert.match(html, new RegExp(`data-filter="${filter}"`));
+  }
+  assert.match(html, /<dialog id="figure-dialog"/);
+  assert.match(
+    html,
+    /id="figure-dialog-close"[^>]*aria-label="Close enlarged figure"/
+  );
+  assert.match(html, /id="copy-citation"/);
+  assert.match(
+    html,
+    /id="citation-status"[^>]*aria-live="polite"/
+  );
+});
+
+test("interaction controller initializes filters, dialog, and citation copy", () => {
+  const controller = read("scripts/cloud-drive.js");
+  assert.match(controller, /function initFigureFilters\(\)/);
+  assert.match(controller, /function initFigureDialog\(\)/);
+  assert.match(controller, /function initCitationCopy\(\)/);
+});

@@ -409,87 +409,116 @@
             <p>Every chart and diagram below comes from the official arXiv source. Captions preserve the paper’s conditions; the added note explains the role each figure plays in the argument.</p>
           </div>
 
+          <div class="figure-tools">
+            <div class="figure-filters" role="group" aria-label="Filter paper figures">
+              <button type="button" data-filter="all" aria-pressed="true">All</button>
+              <button type="button" data-filter="framework" aria-pressed="false">Framework</button>
+              <button type="button" data-filter="communication" aria-pressed="false">Communication</button>
+              <button type="button" data-filter="compute" aria-pressed="false">Compute</button>
+              <button type="button" data-filter="cost" aria-pressed="false">Cost</button>
+            </div>
+            <p id="figure-filter-status" aria-live="polite">Showing all 10 figures.</p>
+          </div>
+
           <div class="figure-grid">
-            <figure class="figure-card" id="figure-1">
+            <figure class="figure-card" id="figure-1" data-category="framework">
               <a class="figure-image-link" href="../images/cloud-drive/figure-01.svg" aria-label="Open full-size Figure 1">
                 <img src="../images/cloud-drive/figure-01.svg" alt="Flowchart linking the communication gate, GPU service and latency models, joint feasibility, infrastructure optimization, and cost crossover." loading="lazy">
               </a>
+              <button class="figure-expand" type="button" data-enlarge aria-label="Enlarge Figure 1">Expand figure</button>
               <figcaption><strong>Figure 1:</strong> Analytical pipeline. The Communication Requirements Model defines the communication-side limit, and the GPU Service Model defines the cloud-side service model used by the Stochastic Latency Model. Those results then feed the Feasibility Threshold; feasible branches proceed to edge infrastructure optimization and are finally compared through the Total Cost of Ownership and Crossover step.</figcaption>
               <p class="figure-why"><strong>Why it matters:</strong> The economics are intentionally last. An attractive price cannot rescue a branch that fails the uplink or timing constraints.</p>
             </figure>
 
-            <figure class="figure-card" id="figure-2">
+            <figure class="figure-card" id="figure-2" data-category="framework">
               <a class="figure-image-link" href="../images/cloud-drive/figure-02.svg" aria-label="Open full-size Figure 2">
                 <img src="../images/cloud-drive/figure-02.svg" alt="Four pipeline rows show S1, S2, S3, and the onboard baseline, with progressively more processing kept inside the vehicle." loading="lazy">
               </a>
+              <button class="figure-expand" type="button" data-enlarge aria-label="Enlarge Figure 2">Expand figure</button>
               <figcaption><strong>Figure 2:</strong> Offloading strategy spectrum.</figcaption>
               <p class="figure-why"><strong>Why it matters:</strong> Moving the split toward the vehicle reduces uplink demand but preserves more expensive onboard compute.</p>
             </figure>
 
-            <figure class="figure-card" id="figure-3">
+            <figure class="figure-card" id="figure-3" data-category="communication">
               <a class="figure-image-link" href="../images/cloud-drive/figure-03.svg" aria-label="Open full-size Figure 3">
                 <img src="../images/cloud-drive/figure-03.svg" alt="Log-scale chart where rising S1, S2, and S3 aggregate uplink demand intersects declining per-user capacity for 5G, 5G-Advanced, and 6G." loading="lazy">
               </a>
+              <button class="figure-expand" type="button" data-enlarge aria-label="Enlarge Figure 3">Expand figure</button>
               <figcaption><strong>Figure 3:</strong> Bandwidth-capacity tradeoff. Colored lines show the required uplink demand for S1–S3 as vehicles per cell increase, while gray generation curves show the available uplink capacity under the interference-aware cell model. Intersections mark the maximum bandwidth-feasible vehicles per cell.</figcaption>
               <p class="figure-why"><strong>Why it matters:</strong> Capacity falls as demand rises, creating a hard admission boundary rather than a gentle performance slowdown.</p>
             </figure>
 
-            <figure class="figure-card" id="figure-4">
+            <figure class="figure-card" id="figure-4" data-category="framework compute">
               <a class="figure-image-link" href="../images/cloud-drive/figure-04.svg" aria-label="Open full-size Figure 4">
                 <img src="../images/cloud-drive/figure-04.svg" alt="Vehicle, network, and cloud layers show deterministic sensing, encoding, inference, and actuation beside stochastic scheduling, routing, queueing, uplink, and downlink delay." loading="lazy">
               </a>
+              <button class="figure-expand" type="button" data-enlarge aria-label="Enlarge Figure 4">Expand figure</button>
               <figcaption><strong>Figure 4:</strong> End-to-end control loop delay decomposition. Solid borders denote deterministic components; dashed borders denote stochastic components that consume the remaining latency slack.</figcaption>
               <p class="figure-why"><strong>Why it matters:</strong> The inference floor is only part of the loop; rare network and queue delays must fit inside whatever budget remains.</p>
             </figure>
 
-            <figure class="figure-card" id="figure-5">
+            <figure class="figure-card" id="figure-5" data-category="communication compute">
               <a class="figure-image-link" href="../images/cloud-drive/figure-05.svg" aria-label="Open full-size Figure 5">
                 <img src="../images/cloud-drive/figure-05.svg" alt="Tail latency curves for S1, S2, and S3 stay low before rising sharply through the 100 millisecond and 300 millisecond budgets as vehicles per cell increase." loading="lazy">
               </a>
+              <button class="figure-expand" type="button" data-enlarge aria-label="Enlarge Figure 5">Expand figure</button>
               <figcaption><strong>Figure 5:</strong> Tail latency under increasing cell utilization. Curves show the 99.999th-percentile end-to-end loop delay under 5G-Advanced (compact E2E workload) as vehicles per cell increase for S1–S3. Horizontal lines mark the reactive 100&nbsp;ms and deliberative 300&nbsp;ms budgets. The sharp rise at high loading is the capacity cliff discussed in the text: stochastic network scheduling consumes the remaining budget Δ, so points above a budget fail the latency side of the feasibility screen.</figcaption>
               <p class="figure-why"><strong>Why it matters:</strong> A branch can pass average capacity and still fail a safety-relevant tail-latency target near the loading cliff.</p>
             </figure>
 
-            <figure class="figure-card" id="figure-6">
+            <figure class="figure-card" id="figure-6" data-category="communication">
               <a class="figure-image-link" href="../images/cloud-drive/figure-06.svg" aria-label="Open full-size Figure 6">
                 <img src="../images/cloud-drive/figure-06.svg" alt="Three panels compare maximum feasible New York City AV penetration by utilization for S1, S2, and S3 under 5G, 5G-Advanced, and 6G." loading="lazy">
               </a>
+              <button class="figure-expand" type="button" data-enlarge aria-label="Enlarge Figure 6">Expand figure</button>
               <figcaption><strong>Figure 6:</strong> Case Study 1: NYC communication frontier. The y-axis gives the maximum citywide fleet penetration that remains bandwidth-feasible at each utilization. Reference points: 1% = 22K vehicles, 10% = 220K vehicles.</figcaption>
               <p class="figure-why"><strong>Why it matters:</strong> The relevant load is concurrent vehicles per cell, so utilization can move the feasible citywide fleet boundary dramatically.</p>
             </figure>
 
-            <figure class="figure-card" id="figure-7">
+            <figure class="figure-card" id="figure-7" data-category="communication">
               <a class="figure-image-link" href="../images/cloud-drive/figure-07.svg" aria-label="Open full-size Figure 7">
                 <img src="../images/cloud-drive/figure-07.svg" alt="Three colored grids show the minimum communication generation needed for each penetration and utilization combination under S1, S2, and S3." loading="lazy">
               </a>
+              <button class="figure-expand" type="button" data-enlarge aria-label="Enlarge Figure 7">Expand figure</button>
               <figcaption><strong>Figure 7:</strong> Case Study 1: NYC communication sweep. Each cell shows the minimum communication generation required to keep a strategy bandwidth-feasible for the given AV penetration and utilization pair. The highlighted cell corresponds to the reference point of 10% penetration and u = 0.45.</figcaption>
               <p class="figure-why"><strong>Why it matters:</strong> S2 occupies the useful middle: far less network pressure than S1 without surrendering most of the cloud-compute saving as S3 does.</p>
             </figure>
 
-            <figure class="figure-card figure-wide" id="figure-8">
+            <figure class="figure-card figure-wide" id="figure-8" data-category="compute">
               <a class="figure-image-link" href="../images/cloud-drive/figure-08.svg" aria-label="Open full-size Figure 8">
                 <img src="../images/cloud-drive/figure-08.svg" alt="The left panel shows VLA deterministic latency dropping below 100 milliseconds after 2026; the right panel shows memory-bandwidth-bound decode dominating the VLA-S2 floor." loading="lazy">
               </a>
+              <button class="figure-expand" type="button" data-enlarge aria-label="Enlarge Figure 8">Expand figure</button>
               <figcaption><strong>Figure 8:</strong> Regime 2 (compute-bound). (a) Deterministic latency floor versus GPU year for VLA (S1–S3), with VLM-S2 and E2E-S2 references; the reactive 100&nbsp;ms and deliberative 300&nbsp;ms budgets are marked. The VLA floor first drops below 100&nbsp;ms in 2027, but this is a lower bound: once the access-scheduling tail is added, reactive admissibility is later and generation-dependent. (b) Decomposition of the VLA-S2 floor: the decode term is HBM-bandwidth-bound and dominates the wall, so it shrinks only with memory bandwidth, not arithmetic throughput.</figcaption>
               <p class="figure-why"><strong>Why it matters:</strong> 6G can remove an uplink bottleneck, but it cannot make an autoregressive decoder read model weights faster.</p>
             </figure>
 
-            <figure class="figure-card figure-wide" id="figure-9">
+            <figure class="figure-card figure-wide" id="figure-9" data-category="compute cost">
               <a class="figure-image-link" href="../images/cloud-drive/figure-09.svg" aria-label="Open full-size Figure 9">
                 <img src="../images/cloud-drive/figure-09.svg" alt="A nine-panel cost chart compares onboard and S1, S2, and S3 annual costs across E2E, VLM, VLA and three utilization levels, with infeasible segments dashed." loading="lazy">
               </a>
+              <button class="figure-expand" type="button" data-enlarge aria-label="Enlarge Figure 9">Expand figure</button>
               <figcaption><strong>Figure 9:</strong> Regime 3 (cost-bound), reactive budget. NYC per-vehicle hybrid cost versus the in-vehicle baseline over time at 5G-Advanced. Rows: model classes. Columns: utilization. Solid curves are latency-feasible under the 100&nbsp;ms budget; dashed segments are latency-infeasible. VLA cloud (S2) falls below the $8,500 baseline once it clears the compute regime.</figcaption>
               <p class="figure-why"><strong>Why it matters:</strong> The sharing advantage is weakest for inexpensive E2E hardware and strongest for costly, intermittently used VLA hardware.</p>
             </figure>
 
-            <figure class="figure-card figure-wide" id="figure-10">
+            <figure class="figure-card figure-wide" id="figure-10" data-category="cost">
               <a class="figure-image-link" href="../images/cloud-drive/figure-10.svg" aria-label="Open full-size Figure 10">
                 <img src="../images/cloud-drive/figure-10.svg" alt="Three cost-ratio heatmaps show the cheapest feasible strategy across penetration and utilization; green VLA cells are widespread and mostly labeled S2." loading="lazy">
               </a>
+              <button class="figure-expand" type="button" data-enlarge aria-label="Enlarge Figure 10">Expand figure</button>
               <figcaption><strong>Figure 10:</strong> Regime 3 (cost-bound), deliberative tier in 2028, where VLA is latency-admissible. Cheapest feasible NYC cloud cost divided by the in-vehicle baseline; cell text gives the cheapest feasible strategy and gray cells are infeasible. Green marks cloud-cheaper cells. For VLA the cost-attractive region is large and dominated by S2.</figcaption>
               <p class="figure-why"><strong>Why it matters:</strong> Once latency is relaxed behind a reactive fallback, S2 wins much of the VLA grid—but the fallback hardware makes this an optimistic economic bound.</p>
             </figure>
           </div>
+          <dialog id="figure-dialog" aria-labelledby="figure-dialog-title">
+            <div class="figure-dialog-shell">
+              <button id="figure-dialog-close" type="button" aria-label="Close enlarged figure">Close</button>
+              <h2 id="figure-dialog-title"></h2>
+              <img id="figure-dialog-image" alt="">
+              <p id="figure-dialog-caption"></p>
+            </div>
+          </dialog>
         </section>
 
         <section class="findings-section" id="findings" aria-labelledby="findings-heading">
@@ -557,13 +586,17 @@
             </div>
           </div>
           <div class="bibtex-card">
-            <p>BibTeX</p>
+            <div class="bibtex-heading">
+              <p>BibTeX</p>
+              <button id="copy-citation" type="button">Copy citation</button>
+            </div>
             <pre id="bibtex"><code>@article{parsa2026cloud,
   title={Can the Cloud Drive? Infrastructure Feasibility of Offloading Autonomous Driving Across 5G and 6G},
   author={Parsa, Pouya and Han, Kawon and Choi, Seongjin},
   journal={arXiv preprint arXiv:2607.09045},
   year={2026}
 }</code></pre>
+            <p id="citation-status" aria-live="polite"></p>
           </div>
         </section>
       </article>
