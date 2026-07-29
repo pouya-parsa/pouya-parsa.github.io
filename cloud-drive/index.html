@@ -108,60 +108,6 @@
                 "item": "https://pouya-parsa.github.io/cloud-drive/"
               }
             ]
-          },
-          {
-            "@type": "FAQPage",
-            "@id": "https://pouya-parsa.github.io/cloud-drive/#faq-schema",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "Can the cloud drive an autonomous vehicle?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Conditionally. The selected offloading strategy must first fit the cellular uplink, then satisfy the closed-loop latency budget. Only a branch that passes both gates should be compared economically with full onboard compute."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Why does not faster 6G solve the whole problem?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "6G can upload more vehicle data with less network delay. It cannot reduce the time a VLA decoder spends reading model weights from GPU memory. The network test and compute test are separate."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What does the Roofline model show for VLA inference?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "It separates GPU arithmetic time from the time spent reading model weights from high-bandwidth memory (HBM). In the paper's 2025 example, autoregressive decoding adds about 114 ms and dominates the compute gate. Faster 5G or 6G does not remove that GPU memory delay."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is feature-level offloading, or S2?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "S2 keeps the vision backbone in the vehicle and uploads compressed intermediate features. It uses much less uplink than raw-sensor offloading while moving more expensive reasoning and planning work to shared infrastructure."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is the difference between the 100 ms and 300 ms tiers?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "The 100 ms tier is the reactive control loop. The 300 ms tier is deliberative planning and is admissible only behind an onboard reactive controller that can act locally within 100 ms."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Is this simulator a deployment or safety-certification tool?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "No. It is an interactive explainer of the analytical assumptions and discrete scenario space published in arXiv:2607.09045v1."
-                }
-              }
-            ]
           }
         ]
       }
@@ -216,7 +162,6 @@
             <a href="#strategies">Strategies</a>
             <a href="#figures">Figures</a>
             <a href="#findings">Findings</a>
-            <a href="#faq">FAQ</a>
           </div>
         </nav>
 
@@ -633,62 +578,6 @@
               <li><span>04</span><div><strong>Low utilization makes sharing more valuable.</strong><p>Cloud pooling avoids buying peak VLA hardware for every parked vehicle.</p></div></li>
               <li><span>05</span><div><strong>S2 is the middle ground.</strong><p>It needs less uplink than S1 and less onboard compute than S3.</p></div></li>
             </ol>
-          </div>
-        </section>
-
-        <section class="limitations-section article-section" id="limitations" aria-labelledby="limitations-heading">
-          <div class="paper-wrap">
-            <div class="section-heading">
-              <div>
-                <p class="section-kicker">Read the boundary conditions</p>
-                <h2 id="limitations-heading">What this study does not prove.</h2>
-              </div>
-            </div>
-            <div class="limitations-grid">
-              <article><h3>Not a safety case</h3><p>Every cloud-dependent architecture adds outage, edge-site, and latency-spike failure modes. A deliberative result never removes the need for local reactive control.</p></article>
-              <article><h3>6G values are targets</h3><p>The 6G parameters use ITU IMT-2030 aspirations, not guaranteed deployed performance.</p></article>
-              <article><h3>Architecture can shift the wall</h3><p>FP8, speculative decoding, distillation, or parallel action decoders could move the VLA timing boundary earlier.</p></article>
-              <article><h3>NYC averages hide hotspots</h3><p>Rush-hour corridors may see several times the average cell load even when a citywide scenario appears feasible.</p></article>
-              <article><h3>Costs are analytical estimates</h3><p>Energy is excluded and marginal cost crossovers could move later. The simulator explains the paper’s assumptions; it does not rerun a live infrastructure bid.</p></article>
-              <article><h3>Versioned evidence</h3><p>This article follows arXiv:2607.09045v1, submitted 10 July 2026. Later paper versions may revise parameters or results.</p></article>
-            </div>
-          </div>
-        </section>
-
-        <section class="faq-section article-section" id="faq" aria-labelledby="faq-heading">
-          <div class="paper-wrap">
-            <div class="section-heading">
-              <div>
-                <p class="section-kicker">Frequently asked questions</p>
-                <h2 id="faq-heading">Questions about cloud driving.</h2>
-              </div>
-            </div>
-            <div class="faq-list">
-              <details>
-                <summary>Can the cloud drive an autonomous vehicle?</summary>
-                <p>Conditionally. The selected offloading strategy must first fit the cellular uplink, then satisfy the closed-loop latency budget. Only a branch that passes both gates should be compared economically with full onboard compute.</p>
-              </details>
-              <details>
-                <summary>Why doesn’t faster 6G solve the whole problem?</summary>
-                <p>6G can upload more vehicle data with less network delay. It cannot reduce the time a VLA decoder spends reading model weights from GPU memory. The network test and compute test are separate.</p>
-              </details>
-              <details>
-                <summary>What does the Roofline model show for VLA inference?</summary>
-                <p>It separates GPU arithmetic time from the time spent reading model weights from high-bandwidth memory (HBM). In the paper's 2025 example, autoregressive decoding adds about 114&nbsp;ms and dominates the compute gate. Faster 5G or 6G does not remove that GPU memory delay.</p>
-              </details>
-              <details>
-                <summary>What is feature-level offloading, or S2?</summary>
-                <p>S2 keeps the vision backbone in the vehicle and uploads compressed intermediate features. It uses much less uplink than raw-sensor offloading while moving more expensive reasoning and planning work to shared infrastructure.</p>
-              </details>
-              <details>
-                <summary>What is the difference between the 100&nbsp;ms and 300&nbsp;ms tiers?</summary>
-                <p>The 100&nbsp;ms tier is the reactive control loop. The 300&nbsp;ms tier is deliberative planning and is admissible only behind an onboard reactive controller that can act locally within 100&nbsp;ms.</p>
-              </details>
-              <details>
-                <summary>Is this simulator a deployment or safety-certification tool?</summary>
-                <p>No. It is an interactive explainer of the analytical assumptions and discrete scenario space published in arXiv:2607.09045v1.</p>
-              </details>
-            </div>
           </div>
         </section>
 

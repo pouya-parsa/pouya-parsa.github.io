@@ -41,7 +41,6 @@ test("Cloud Drive article exposes semantic research and discovery metadata", () 
   assert.match(html, /name="citation_title"/);
   assert.match(html, /name="citation_arxiv_id" content="2607\.09045"/);
   assert.match(html, /"@type":\s*"ScholarlyArticle"/);
-  assert.match(html, /"@type":\s*"FAQPage"/);
   for (const id of [
     "answer",
     "three-gates",
@@ -49,8 +48,6 @@ test("Cloud Drive article exposes semantic research and discovery metadata", () 
     "strategies",
     "figures",
     "findings",
-    "limitations",
-    "faq",
     "citation",
   ]) {
     assert.match(html, new RegExp(`id="${id}"`), `missing #${id}`);
@@ -177,7 +174,6 @@ test("article uses the approved academic project-page structure", () => {
     "#strategies",
     "#figures",
     "#findings",
-    "#faq",
   ]) {
     assert.match(html, new RegExp(`href="${href}"`));
   }
@@ -287,8 +283,6 @@ test("article uses the approved direct headline system", () => {
     "Choose where the model splits.",
     "See the evidence from the paper.",
     "Five takeaways.",
-    "What this study does not prove.",
-    "Questions about cloud driving.",
   ]) {
     assert.ok(html.includes(headline), `missing direct headline: ${headline}`);
   }
@@ -319,25 +313,28 @@ test("discovery metadata centers the VLA Roofline result", () => {
   assert.ok(article.keywords.includes("GPU memory bandwidth"));
 });
 
-test("visible and structured FAQ explain the same Roofline result", () => {
+test("article omits the removed limitations and FAQ surfaces", () => {
   const html = read("cloud-drive/index.html");
-  const question = "What does the Roofline model show for VLA inference?";
-  const answer =
-    "It separates GPU arithmetic time from the time spent reading model " +
-    "weights from high-bandwidth memory (HBM). In the paper's 2025 " +
-    "example, autoregressive decoding adds about 114 ms and dominates " +
-    "the compute gate. Faster 5G or 6G does not remove that GPU memory delay.";
 
-  assert.ok(html.includes(`<summary>${question}</summary>`));
-  assert.ok(html.includes(answer.replace("114 ms", "114&nbsp;ms")));
+  for (const removed of [
+    /id="limitations"/,
+    /id="faq"/,
+    /href="#faq"/,
+    /What this study does not prove\./,
+    /Questions about cloud driving\./,
+  ]) {
+    assert.doesNotMatch(html, removed);
+  }
 
   const jsonLdMatch = html.match(
     /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
   );
+  assert.ok(jsonLdMatch, "JSON-LD block is missing");
   const graph = JSON.parse(jsonLdMatch[1])["@graph"];
-  const faq = graph.find((node) => node["@type"] === "FAQPage");
-  const roofline = faq.mainEntity.find((item) => item.name === question);
-  assert.equal(roofline.acceptedAnswer.text, answer);
+  assert.equal(
+    graph.some((node) => node["@type"] === "FAQPage"),
+    false
+  );
 });
 
 test("homepage leads with the VLA memory-bandwidth result", () => {
