@@ -18,6 +18,38 @@ test("homepage promotes the Cloud Drive paper and article", () => {
   assert.match(html, /arXiv:2607\.09045/);
 });
 
+test("homepage exposes canonical social and Person discovery metadata", () => {
+  const html = read("index.html");
+  assert.match(
+    html,
+    /rel="canonical" href="https:\/\/pouya-parsa\.github\.io\/"/
+  );
+  assert.match(html, /property="og:type" content="profile"/);
+  assert.match(
+    html,
+    /property="og:url" content="https:\/\/pouya-parsa\.github\.io\/"/
+  );
+  assert.match(
+    html,
+    /property="og:image" content="https:\/\/pouya-parsa\.github\.io\/profile_image\.png"/
+  );
+  assert.match(html, /name="twitter:card" content="summary"/);
+
+  const block = html.match(
+    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
+  );
+  assert.ok(block, "homepage JSON-LD block is missing");
+  const person = JSON.parse(block[1]);
+  assert.equal(person["@type"], "Person");
+  assert.equal(
+    person["@id"],
+    "https://pouya-parsa.github.io/#pouya-parsa"
+  );
+  assert.equal(person.name, "Pouya Parsa");
+  assert.equal(person.url, "https://pouya-parsa.github.io/");
+  assert.equal(person.sameAs, "https://github.com/pouya-parsa");
+});
+
 test("all ten official paper figures are present and non-empty", () => {
   for (let index = 1; index <= 10; index += 1) {
     const name = `images/cloud-drive/figure-${String(index).padStart(2, "0")}.svg`;
