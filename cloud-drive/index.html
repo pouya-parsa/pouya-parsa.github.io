@@ -211,8 +211,8 @@
         <section class="answer-section article-section" id="answer" aria-labelledby="answer-heading">
           <div class="paper-wrap">
             <div class="section-kicker">The short answer</div>
-            <h2 id="answer-heading">Can autonomous-driving inference move to the cloud?</h2>
-            <p class="answer-lead"><strong>Yes—but only conditionally, and in a specific order.</strong> In dense cities, the uplink must carry the offloaded workload first. The cloud must then return a decision within either a 100&nbsp;ms reactive loop or a 300&nbsp;ms deliberative tier backed by a local reactive controller. Only after both gates pass does shared cloud compute become an economic question.</p>
+            <h2 id="answer-heading">Can the cloud run an autonomous-driving model?</h2>
+            <p class="answer-lead"><strong>Yes—but the system must pass three tests in order.</strong> First, the network must upload the vehicle’s data. Next, the cloud GPU must return a result within the driving deadline. Only then does it make sense to ask whether shared cloud hardware costs less than a computer in every vehicle.</p>
             <aside class="answer-note">
               <span>Core finding</span>
               <p>Latency decides which model is admissible in which year; cost decides whether it is economical.</p>
@@ -225,36 +225,83 @@
             <div class="section-heading">
               <div>
                 <p class="section-kicker">The result in one sequence</p>
-                <h2 id="gates-heading">Three constraints bind—one after another.</h2>
+                <h2 id="gates-heading">Cloud driving must pass three tests.</h2>
               </div>
-              <p>The paper links a driving-model split, the cellular access network, and cloud GPU service into one deployment question. A branch must clear each gate before the next one matters.</p>
+              <p>The paper tests the network first, GPU response time second, and cost last. If a scenario fails one test, the later tests cannot rescue it.</p>
             </div>
 
             <div class="gate-stories">
               <article class="gate-story communication">
-                <p class="gate-label">Gate 01 <span>Communication-bound</span></p>
-                <h3>Dense cells run out of uplink first.</h3>
-                <p>Cloud driving reverses normal mobile traffic: the difficult flow is upstream. Raw sensors require 100&nbsp;Mbps per vehicle, compressed features 25&nbsp;Mbps, and compact queries 3&nbsp;Mbps. As more vehicles share a cell, bandwidth is divided and interference lowers spectral efficiency.</p>
-                <p class="gate-takeaway">At the NYC reference point—10% AV penetration and 45% utilization—plain 5G already fails feature-level offloading. 5G-Advanced is the practical threshold; 6G adds headroom.</p>
-                <a href="#figure-7">See the NYC communication map →</a>
+                <p class="gate-label">Gate 01 <span>Communication</span></p>
+                <h3>Can the network upload the data?</h3>
+                <p><strong>Not always.</strong> Cloud driving sends data upstream from every active vehicle. Raw sensors need 100&nbsp;Mbps per vehicle, compressed features need 25&nbsp;Mbps, and compact queries need 3&nbsp;Mbps.</p>
+                <p class="gate-takeaway">At the dense NYC reference point, plain 5G cannot support feature-level offloading. 5G-Advanced is the practical threshold, and 6G adds room for more vehicles.</p>
+                <a href="#figure-7">See the NYC network result →</a>
               </article>
 
               <article class="gate-story compute">
-                <p class="gate-label">Gate 02 <span>Compute-bound</span></p>
-                <h3>More bandwidth cannot outrun a memory wall.</h3>
-                <p>On 2025 hardware, the deterministic vision-language-action (VLA) floor is 132–164&nbsp;ms before network or queueing delay. Autoregressive decode alone is about 114&nbsp;ms because each generated token rereads model weights from high-bandwidth memory (HBM).</p>
-                <p class="gate-takeaway">The floor first clears 100&nbsp;ms around 2027. After access-network tails are added, 6G admits dense VLA-S2 around 2028; 5G-Advanced does not clear the same reactive corridor.</p>
-                <a href="#figure-8">Inspect the latency decomposition →</a>
+                <p class="gate-label">Gate 02 <span>Compute time</span></p>
+                <h3>Can the GPU respond in time?</h3>
+                <p><strong>Not for near-term VLA under the 100&nbsp;ms deadline.</strong> The decoder reads large model weights from GPU memory once for every generated step. That repeated reading takes longer than the arithmetic.</p>
+                <p class="gate-takeaway">In 2025, the deterministic VLA floor is 132–164&nbsp;ms before network or queueing delay. Faster 5G or 6G cannot remove this GPU memory delay.</p>
+                <a href="#compute-roofline">See why VLA waits on memory →</a>
               </article>
 
               <article class="gate-story cost">
-                <p class="gate-label">Gate 03 <span>Cost-bound</span></p>
-                <h3>Only feasible branches earn a cost comparison.</h3>
-                <p>Onboard hardware is purchased for every vehicle, even when it is parked. Cloud GPUs are pooled across vehicles that are active at the same moment. This asymmetry matters most for VLA hardware, whose reference baseline reaches $8,500 per vehicle-year.</p>
-                <p class="gate-takeaway">Once admissible, low- and moderate-utilization VLA fleets gain the most. Feature-level offloading (S2) is where the cost advantage concentrates.</p>
-                <a href="#figure-10">Explore the cost-ratio map →</a>
+                <p class="gate-label">Gate 03 <span>Cost</span></p>
+                <h3>Is the cloud cheaper?</h3>
+                <p><strong>For some VLA fleets—after the first two tests pass.</strong> A computer bought for every vehicle sits idle while the vehicle is parked. Shared cloud GPUs serve only the vehicles that are active.</p>
+                <p class="gate-takeaway">The cloud advantage is strongest for expensive VLA hardware at low or moderate utilization. Feature-level offloading, or S2, is where most of the VLA savings appear.</p>
+                <a href="#figure-10">See where cloud VLA costs less →</a>
               </article>
             </div>
+          </div>
+        </section>
+
+        <section class="roofline-section article-section" id="compute-roofline" aria-labelledby="roofline-heading">
+          <div class="paper-wrap">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Why VLA compute is slow</p>
+                <h2 id="roofline-heading">VLA waits on memory, not just math.</h2>
+              </div>
+              <p>The paper’s Roofline model separates the time a GPU spends doing arithmetic from the time it spends moving model weights through memory.</p>
+            </div>
+
+            <div class="roofline-layout">
+              <div class="roofline-copy">
+                <p class="roofline-lead"><strong>The memory reads dominate.</strong> A vision-language-action (VLA) model connects visual perception, language reasoning, and driving actions in one large model.</p>
+                <p>The encoder and prefill stages mainly use the GPU’s arithmetic units. The autoregressive decoder works differently: it produces reasoning and trajectory outputs one step at a time.</p>
+                <p>The VLA decoder generates an action one step at a time. At every step, the GPU must read the model weights from high-bandwidth memory again.</p>
+                <aside class="roofline-definition">
+                  <strong>Roofline, in one sentence</strong>
+                  <p>It shows whether a workload is waiting on GPU arithmetic or on data moving through GPU memory.</p>
+                </aside>
+              </div>
+
+              <a class="roofline-visual" href="#figure-8" aria-label="Jump to the full Figure 8 caption">
+                <img src="../images/cloud-drive/figure-08.svg" alt="VLA latency by GPU year and a breakdown showing that autoregressive decoding is limited by GPU memory bandwidth.">
+                <span><strong>Figure 8:</strong> The left panel shows when each model fits the deadline. The right panel shows why VLA decoding improves with memory bandwidth, not just more arithmetic throughput.</span>
+              </a>
+            </div>
+
+            <dl class="roofline-numbers" aria-label="2025 VLA Roofline timing example">
+              <div>
+                <dt>39&nbsp;ms</dt>
+                <dd><strong>Do the math</strong><span>Encoder and prefill in a compute-only estimate.</span></dd>
+              </div>
+              <div>
+                <dt>+114&nbsp;ms</dt>
+                <dd><strong>Read the weights</strong><span>Autoregressive reasoning and trajectory decoding.</span></dd>
+              </div>
+              <div>
+                <dt>153&nbsp;ms</dt>
+                <dd><strong>Cloud inference</strong><span>The memory-aware total before the rest of the driving loop.</span></dd>
+              </div>
+            </dl>
+
+            <p class="roofline-scope"><strong>Scope:</strong> This is the paper’s 2025 B300 raw-sensor offloading example for its calibrated FP16, dense, single-request autoregressive VLA stack. It is not a universal VLA benchmark.</p>
+            <p class="roofline-result">Across S1–S3, the complete deterministic VLA floor is 132–164&nbsp;ms in 2025. It first falls below 100&nbsp;ms around 2027, but that floor is only a lower bound: network and queueing delays still have to fit. At the dense NYC reference point, 6G admits VLA-S2 around 2028; 5G-Advanced does not pass the same 100&nbsp;ms case.</p>
           </div>
         </section>
 
@@ -263,7 +310,7 @@
             <div class="section-heading">
               <div>
                 <p class="section-kicker">Interactive model</p>
-                <h2 id="simulator-heading">Which gate binds your scenario?</h2>
+                <h2 id="simulator-heading">Test a cloud-driving scenario.</h2>
               </div>
               <p>Choose values from the paper’s 1,296-branch scenario grid. Results are analytical estimates from arXiv:2607.09045v1—not production safety guidance.</p>
             </div>
@@ -392,7 +439,7 @@
             <div class="section-heading">
               <div>
                 <p class="section-kicker">Where should the pipeline split?</p>
-                <h2 id="strategies-heading">Three offloading strategies trade bandwidth for onboard compute.</h2>
+                <h2 id="strategies-heading">Choose where the model splits.</h2>
               </div>
             </div>
             <div class="strategy-grid">
@@ -441,7 +488,7 @@
             <div class="section-heading">
               <div>
                 <p class="section-kicker">The complete visual evidence</p>
-                <h2 id="figures-heading">Explore all ten paper figures.</h2>
+                <h2 id="figures-heading">See the evidence from the paper.</h2>
               </div>
               <p>Every chart and diagram below comes from the official arXiv source. Captions preserve the paper’s conditions; the added note explains the role each figure plays in the argument.</p>
             </div>
@@ -564,7 +611,7 @@
             <div class="section-heading">
               <div>
                 <p class="section-kicker">What the figures add up to</p>
-                <h2 id="findings-heading">Five findings to carry forward.</h2>
+                <h2 id="findings-heading">Five takeaways.</h2>
               </div>
             </div>
             <ol class="finding-list">
@@ -582,7 +629,7 @@
             <div class="section-heading">
               <div>
                 <p class="section-kicker">Read the boundary conditions</p>
-                <h2 id="limitations-heading">What this analysis does not claim.</h2>
+                <h2 id="limitations-heading">What this study does not prove.</h2>
               </div>
             </div>
             <div class="limitations-grid">
@@ -601,7 +648,7 @@
             <div class="section-heading">
               <div>
                 <p class="section-kicker">Frequently asked questions</p>
-                <h2 id="faq-heading">Quick answers about cloud driving.</h2>
+                <h2 id="faq-heading">Questions about cloud driving.</h2>
               </div>
             </div>
             <div class="faq-list">

@@ -233,3 +233,63 @@ test("controller initializes presets, scenario copy, and section navigation", ()
   assert.match(controller, /SCENARIO_PRESETS/);
   assert.match(controller, /IntersectionObserver/);
 });
+
+test("article gives VLA Roofline compute its own plain-language section", () => {
+  const html = read("cloud-drive/index.html");
+
+  assert.match(
+    html,
+    /id="compute-roofline"[^>]*aria-labelledby="roofline-heading"/
+  );
+  assert.match(
+    html,
+    /id="roofline-heading">VLA waits on memory, not just math\.<\/h2>/
+  );
+  assert.match(
+    html,
+    /The VLA decoder generates an action one step at a time\./
+  );
+  assert.match(
+    html,
+    /GPU must read the model weights from high-bandwidth memory again\./
+  );
+  assert.match(
+    html,
+    /href="#figure-8"[\s\S]*src="\.\.\/images\/cloud-drive\/figure-08\.svg"/
+  );
+
+  for (const fact of [
+    /<dt>39&nbsp;ms<\/dt>[\s\S]*Do the math/,
+    /<dt>\+114&nbsp;ms<\/dt>[\s\S]*Read the weights/,
+    /<dt>153&nbsp;ms<\/dt>[\s\S]*Cloud inference/,
+    /132–164&nbsp;ms/,
+    /first falls below 100&nbsp;ms around 2027/,
+  ]) {
+    assert.match(html, fact);
+  }
+
+  assert.match(
+    html,
+    /2025 B300 raw-sensor offloading example[\s\S]*FP16, dense, single-request autoregressive VLA stack/
+  );
+});
+
+test("article uses the approved direct headline system", () => {
+  const html = read("cloud-drive/index.html");
+
+  for (const headline of [
+    "Can the cloud run an autonomous-driving model?",
+    "Cloud driving must pass three tests.",
+    "Can the network upload the data?",
+    "Can the GPU respond in time?",
+    "Is the cloud cheaper?",
+    "Test a cloud-driving scenario.",
+    "Choose where the model splits.",
+    "See the evidence from the paper.",
+    "Five takeaways.",
+    "What this study does not prove.",
+    "Questions about cloud driving.",
+  ]) {
+    assert.ok(html.includes(headline), `missing direct headline: ${headline}`);
+  }
+});
