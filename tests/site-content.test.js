@@ -131,3 +131,29 @@ test("interaction controller initializes filters, dialog, and citation copy", ()
   assert.match(controller, /function initFigureDialog\(\)/);
   assert.match(controller, /function initCitationCopy\(\)/);
 });
+
+test("crawler discovery and social preview point to the canonical article", () => {
+  const html = read("cloud-drive/index.html");
+  const robots = read("robots.txt");
+  const sitemap = read("sitemap.xml");
+  const socialImage = path.join(
+    root,
+    "images/cloud-drive/og-cloud-drive.png"
+  );
+
+  assert.match(robots, /Sitemap: https:\/\/pouya-parsa\.github\.io\/sitemap\.xml/);
+  assert.match(
+    sitemap,
+    /<loc>https:\/\/pouya-parsa\.github\.io\/cloud-drive\/<\/loc>/
+  );
+  assert.match(
+    html,
+    /property="og:image" content="https:\/\/pouya-parsa\.github\.io\/images\/cloud-drive\/og-cloud-drive\.png"/
+  );
+  assert.match(html, /name="twitter:card" content="summary_large_image"/);
+  assert.equal(fs.existsSync(socialImage), true, "social preview image is missing");
+  assert.ok(
+    fs.statSync(socialImage).size > 10_000,
+    "social preview image is unexpectedly small"
+  );
+});
