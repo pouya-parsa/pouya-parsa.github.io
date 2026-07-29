@@ -157,3 +157,54 @@ test("crawler discovery and social preview point to the canonical article", () =
     "social preview image is unexpectedly small"
   );
 });
+
+test("article uses the approved academic project-page structure", () => {
+  const html = read("cloud-drive/index.html");
+  assert.match(html, /class="paper-hero"/);
+  assert.match(
+    html,
+    /class="project-badge">Interactive research article</
+  );
+  assert.match(html, /class="overview-media"/);
+  assert.match(
+    html,
+    /class="paper-nav"[^>]*aria-label="Paper sections"/
+  );
+
+  for (const href of [
+    "#overview",
+    "#simulator",
+    "#strategies",
+    "#figures",
+    "#findings",
+    "#faq",
+  ]) {
+    assert.match(html, new RegExp(`href="${href}"`));
+  }
+
+  for (const fact of [
+    /<dt>3<\/dt><dd>feasibility gates<\/dd>/,
+    /<dt>1,296<\/dt><dd>scenarios<\/dd>/,
+    /<dt>10<\/dt><dd>official figures<\/dd>/,
+    /<dt>5G–6G<\/dt><dd>5G through 6G<\/dd>/,
+  ]) {
+    assert.match(html, fact);
+  }
+});
+
+test("simulator exposes presets and a shareable-scenario fallback", () => {
+  const html = read("cloud-drive/index.html");
+  for (const preset of [
+    "denseNyc",
+    "fiveGBottleneck",
+    "sixGVla",
+    "lowUtilizationCost",
+  ]) {
+    assert.match(html, new RegExp(`data-preset="${preset}"`));
+  }
+  assert.match(html, /id="copy-scenario"/);
+  assert.match(
+    html,
+    /id="scenario-link-status"[^>]*aria-live="polite"/
+  );
+});
