@@ -353,3 +353,23 @@ test("homepage leads with the VLA memory-bandwidth result", () => {
     /href="https:\/\/arxiv\.org\/pdf\/2607\.09045">Read the paper/
   );
 });
+
+test("Roofline explainer extends the academic responsive system", () => {
+  const css = read("css/cloud-drive.css");
+
+  assert.match(css, /\.roofline-layout\s*\{[\s\S]*display:\s*grid/);
+  assert.match(
+    css,
+    /\.roofline-layout\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)\s+minmax\(340px,\s*0\.9fr\)/
+  );
+  assert.match(
+    css,
+    /\.roofline-numbers\s*\{[\s\S]*grid-template-columns:\s*repeat\(3,\s*1fr\)/
+  );
+  assert.match(css, /\.roofline-visual:focus-visible/);
+  assert.match(
+    css,
+    /@media\s*\(max-width:\s*760px\)[\s\S]*\.roofline-numbers\s*\{[\s\S]*grid-template-columns:\s*1fr/
+  );
+  assert.match(css, /@media\s*print[\s\S]*\.roofline-section/);
+});
