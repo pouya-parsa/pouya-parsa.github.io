@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 const {
   SCENARIO_OPTIONS,
   REFERENCE_SCENARIO,
+  SCENARIO_PRESETS,
   evaluateScenario,
 } = require("../scripts/cloud-drive-model.js");
 
@@ -158,4 +159,40 @@ test("all 1296 published grid branches return finite gate values", () => {
             assert.ok(Number.isFinite(result.deterministicFloorMs));
             assert.equal(typeof result.jointlyFeasible, "boolean");
           }
+});
+
+test("scenario presets lock four valid paper-grid branches", () => {
+  assert.deepEqual(Object.keys(SCENARIO_PRESETS), [
+    "denseNyc",
+    "fiveGBottleneck",
+    "sixGVla",
+    "lowUtilizationCost",
+  ]);
+
+  for (const preset of Object.values(SCENARIO_PRESETS)) {
+    const result = evaluateScenario(preset.input);
+    assert.deepEqual(result.input, preset.input);
+    assert.ok(preset.label.length > 0);
+    assert.ok(preset.description.length > 0);
+    assert.equal(Object.isFrozen(preset.input), true);
+  }
+});
+
+test("scenario presets demonstrate their promised feasibility regimes", () => {
+  const dense = evaluateScenario(SCENARIO_PRESETS.denseNyc.input);
+  const bottleneck = evaluateScenario(
+    SCENARIO_PRESETS.fiveGBottleneck.input
+  );
+  const sixG = evaluateScenario(SCENARIO_PRESETS.sixGVla.input);
+  const lowCost = evaluateScenario(
+    SCENARIO_PRESETS.lowUtilizationCost.input
+  );
+
+  assert.equal(dense.firstBindingGate, "compute");
+  assert.equal(bottleneck.firstBindingGate, "communication");
+  assert.equal(sixG.jointlyFeasible, true);
+  assert.equal(sixG.cloudCheaper, true);
+  assert.equal(lowCost.jointlyFeasible, true);
+  assert.equal(lowCost.cloudCheaper, true);
+  assert.match(lowCost.caveats.join(" "), /onboard reactive fallback/i);
 });

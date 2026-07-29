@@ -22,6 +22,43 @@
     year: 2028,
   });
 
+  const SCENARIO_PRESETS = Object.freeze({
+    denseNyc: Object.freeze({
+      label: "Dense NYC Reference",
+      description:
+        "Feature-level VLA offloading is compute-bound in dense 5G-Advanced.",
+      input: REFERENCE_SCENARIO,
+    }),
+    fiveGBottleneck: Object.freeze({
+      label: "5G Bottleneck",
+      description:
+        "The same dense VLA-S2 branch runs into the communication gate first.",
+      input: Object.freeze({
+        ...REFERENCE_SCENARIO,
+        generation: "5G",
+      }),
+    }),
+    sixGVla: Object.freeze({
+      label: "6G VLA",
+      description:
+        "In 2028, dense VLA-S2 clears the reactive corridor under the paper's 6G targets.",
+      input: Object.freeze({
+        ...REFERENCE_SCENARIO,
+        generation: "6G",
+      }),
+    }),
+    lowUtilizationCost: Object.freeze({
+      label: "Low-Utilization Cost Case",
+      description:
+        "A deliberative VLA-S2 branch shows the pooling advantage at 12% utilization.",
+      input: Object.freeze({
+        ...REFERENCE_SCENARIO,
+        budgetMs: 300,
+        utilization: 0.12,
+      }),
+    }),
+  });
+
   const PAPER = Object.freeze({
     version: "arXiv:2607.09045v1",
     fleetVehicles: 2_200_000,
@@ -587,6 +624,7 @@
   const api = Object.freeze({
     SCENARIO_OPTIONS,
     REFERENCE_SCENARIO,
+    SCENARIO_PRESETS,
     evaluateScenario,
   });
 
