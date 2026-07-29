@@ -23,6 +23,9 @@
 
     if (!text.includes("Video-based Vehicle Surveillance in the Wild")) failures.push("Expected first publication title");
     if (!text.includes("Where2Start")) failures.push("Expected second publication title");
+    if (!text.includes("Can the Cloud Drive?")) failures.push("Expected Cloud Drive publication title");
+    if (doc.querySelectorAll('a[href="cloud-drive/"]').length !== 3) failures.push("Expected three links to the interactive Cloud Drive article");
+    if (!doc.querySelector('a[href="https://arxiv.org/pdf/2607.09045"]')) failures.push("Expected official Cloud Drive paper link");
     if (!text.includes("LLM memory")) failures.push("Expected LLM memory focus in homepage copy");
     const profileText = doc.querySelector(".profile-links")?.textContent || "";
     if (/\+\d\s\d{3}\s\d{3}\s\d{4}/.test(profileText)) failures.push("Expected no visible phone number");
