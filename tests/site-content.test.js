@@ -219,6 +219,8 @@ test("article stylesheet exposes the approved light academic system", () => {
   assert.match(css, /@media\s*\(max-width:\s*760px\)/);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   assert.match(css, /@media\s*print/);
+  assert.doesNotMatch(css, /\.limitations-(?:section|grid)/);
+  assert.doesNotMatch(css, /\.faq-(?:section|list)/);
 });
 
 test("controller initializes presets, scenario copy, and section navigation", () => {

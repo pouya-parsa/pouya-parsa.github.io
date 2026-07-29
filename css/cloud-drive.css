@@ -384,8 +384,7 @@ section[id] {
 }
 
 .gate-stories,
-.strategy-grid,
-.limitations-grid {
+.strategy-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
@@ -393,7 +392,6 @@ section[id] {
 
 .gate-story,
 .strategy-card,
-.limitations-grid article,
 .simulator-shell,
 .scenario-result,
 .figure-card {
@@ -404,8 +402,7 @@ section[id] {
 }
 
 .gate-story,
-.strategy-card,
-.limitations-grid article {
+.strategy-card {
   padding: 22px;
 }
 
@@ -439,16 +436,14 @@ section[id] {
 }
 
 .gate-story h3,
-.strategy-card h3,
-.limitations-grid h3 {
+.strategy-card h3 {
   margin: 14px 0 8px;
   font-size: 1.12rem;
   line-height: 1.3;
 }
 
 .gate-story > p:not(.gate-label),
-.strategy-card > p:last-child,
-.limitations-grid p {
+.strategy-card > p:last-child {
   color: #3d4251;
   font-size: 0.92rem;
 }
@@ -1060,44 +1055,6 @@ thead th {
   color: var(--muted);
 }
 
-.limitations-section {
-  background: var(--surface);
-}
-
-.limitations-grid article {
-  background: #fff;
-}
-
-.limitations-grid h3 {
-  margin-top: 0;
-}
-
-.limitations-grid p {
-  margin-bottom: 0;
-}
-
-.faq-list {
-  max-width: var(--reading-width);
-  margin: 0 auto;
-  border-top: 1px solid var(--line);
-}
-
-.faq-list details {
-  border-bottom: 1px solid var(--line);
-}
-
-.faq-list summary {
-  min-height: 52px;
-  padding: 14px 0;
-  font-weight: 750;
-  cursor: pointer;
-}
-
-.faq-list details p {
-  margin: -2px 0 18px;
-  color: var(--muted);
-}
-
 .citation-layout {
   display: grid;
   grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
@@ -1173,8 +1130,7 @@ thead th {
   }
 
   .gate-stories,
-  .strategy-grid,
-  .limitations-grid {
+  .strategy-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -1292,8 +1248,7 @@ thead th {
   .paper-hero,
   .article-section,
   .simulator-section,
-  .figures-section,
-  .limitations-section {
+  .figures-section {
     color: #000;
     background: #fff;
   }
@@ -1323,8 +1278,7 @@ thead th {
   .simulator-shell,
   .scenario-result,
   .gate-story,
-  .strategy-card,
-  .limitations-grid article {
+  .strategy-card {
     color: #000;
     background: #fff;
     border-color: #aaa;
