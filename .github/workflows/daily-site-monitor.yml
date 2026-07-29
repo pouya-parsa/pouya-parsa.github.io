@@ -1,0 +1,132 @@
+name: Daily SEO and GEO monitor
+
+on:
+  schedule:
+    - cron: "17 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-site-monitor
+  cancel-in-progress: true
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SITE_BASE_URL: https://pouya-parsa.github.io/
+      SITE_CANONICAL_BASE_URL: https://pouya-parsa.github.io/
+      LHCI_BASE_URL: https://pouya-parsa.github.io/
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install monitoring dependencies
+        run: npm ci
+
+      - name: Run repository tests
+        id: tests
+        continue-on-error: true
+        run: npm test
+
+      - name: Audit live site
+        id: site_audit
+        continue-on-error: true
+        run: npm run monitor:site
+
+      - name: Collect Lighthouse runs
+        id: lighthouse_collect
+        if: always()
+        continue-on-error: true
+        run: npm run monitor:lighthouse:collect
+
+      - name: Save Lighthouse reports
+        id: lighthouse_upload
+        if: always()
+        continue-on-error: true
+        run: npm run monitor:lighthouse:upload
+
+      - name: Assert Lighthouse thresholds
+        id: lighthouse_assert
+        if: always()
+        continue-on-error: true
+        run: npm run monitor:lighthouse:assert
+
+      - name: Summarize Lighthouse results
+        id: lighthouse_summary
+        if: always()
+        continue-on-error: true
+        run: npm run monitor:lighthouse:summary
+
+      - name: Publish monitoring summary
+        if: always()
+        shell: bash
+        run: |
+          echo "# Daily SEO and GEO monitor" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [[ -f .monitoring/site-audit.md ]]; then
+            cat .monitoring/site-audit.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "## Live-site audit" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "**Overall: FAIL** — no live-site report was produced." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [[ -f .monitoring/lighthouse-summary.md ]]; then
+            cat .monitoring/lighthouse-summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "## Lighthouse mobile audit" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "**Overall: FAIL** — no Lighthouse summary was produced." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload monitoring artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: site-monitor-${{ github.run_id }}
+          path: |
+            .monitoring/
+            .lighthouseci/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Apply final monitoring gate
+        if: always()
+        shell: bash
+        env:
+          TESTS: ${{ steps.tests.outcome }}
+          SITE_AUDIT: ${{ steps.site_audit.outcome }}
+          LIGHTHOUSE_COLLECT: ${{ steps.lighthouse_collect.outcome }}
+          LIGHTHOUSE_UPLOAD: ${{ steps.lighthouse_upload.outcome }}
+          LIGHTHOUSE_ASSERT: ${{ steps.lighthouse_assert.outcome }}
+          LIGHTHOUSE_SUMMARY: ${{ steps.lighthouse_summary.outcome }}
+        run: |
+          failed=0
+          for outcome in \
+            "$TESTS" \
+            "$SITE_AUDIT" \
+            "$LIGHTHOUSE_COLLECT" \
+            "$LIGHTHOUSE_UPLOAD" \
+            "$LIGHTHOUSE_ASSERT" \
+            "$LIGHTHOUSE_SUMMARY"
+          do
+            if [[ "$outcome" != "success" ]]; then
+              failed=1
+            fi
+          done
+          if [[ "$failed" -ne 0 ]]; then
+            echo "One or more required monitoring stages failed."
+            exit 1
+          fi
