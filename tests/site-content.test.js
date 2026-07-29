@@ -208,3 +208,19 @@ test("simulator exposes presets and a shareable-scenario fallback", () => {
     /id="scenario-link-status"[^>]*aria-live="polite"/
   );
 });
+
+test("article stylesheet exposes the approved light academic system", () => {
+  const css = read("css/cloud-drive.css");
+  assert.match(css, /--accent:\s*#2f6df6/);
+  assert.match(css, /--max-width:\s*980px/);
+  assert.match(css, /\.paper-hero\s*\{/);
+  assert.match(css, /\.paper-nav\s*\{[\s\S]*position:\s*sticky/);
+  assert.match(css, /\.paper-facts\s*\{[\s\S]*display:\s*grid/);
+  assert.match(
+    css,
+    /\.figure-grid\s*\{[\s\S]*grid-template-columns:\s*repeat\(2/
+  );
+  assert.match(css, /@media\s*\(max-width:\s*760px\)/);
+  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
+  assert.match(css, /@media\s*print/);
+});
