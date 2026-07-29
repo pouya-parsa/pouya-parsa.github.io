@@ -224,3 +224,12 @@ test("article stylesheet exposes the approved light academic system", () => {
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   assert.match(css, /@media\s*print/);
 });
+
+test("controller initializes presets, scenario copy, and section navigation", () => {
+  const controller = read("scripts/cloud-drive.js");
+  assert.match(controller, /function initPresetControls\(\)/);
+  assert.match(controller, /function initScenarioCopy\(\)/);
+  assert.match(controller, /function initSectionNavigation\(\)/);
+  assert.match(controller, /SCENARIO_PRESETS/);
+  assert.match(controller, /IntersectionObserver/);
+});
