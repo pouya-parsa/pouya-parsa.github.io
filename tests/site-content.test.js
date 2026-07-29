@@ -71,3 +71,32 @@ test("Cloud Drive article includes all ten captioned figures", () => {
   assert.equal((html.match(/<figure\b/g) || []).length, 10);
   assert.equal((html.match(/class="figure-why"/g) || []).length, 10);
 });
+
+test("simulator exposes every input and an accessible live result", () => {
+  const html = read("cloud-drive/index.html");
+  for (const name of [
+    "model",
+    "strategy",
+    "generation",
+    "budgetMs",
+    "penetration",
+    "utilization",
+    "year",
+  ]) {
+    assert.match(html, new RegExp(`name="${name}"`));
+  }
+  assert.match(html, /id="scenario-result"[^>]*aria-live="polite"/);
+  assert.match(html, /id="gate-communication"/);
+  assert.match(html, /id="gate-compute"/);
+  assert.match(html, /id="gate-cost"/);
+  assert.match(
+    html,
+    /<noscript>[\s\S]*reference scenario[\s\S]*<\/noscript>/i
+  );
+});
+
+test("interactive controller contains no inline scientific constants", () => {
+  const controller = read("scripts/cloud-drive.js");
+  assert.doesNotMatch(controller, /2_200_000|8_500|5600|1500/);
+  assert.match(controller, /CloudDriveModel\.evaluateScenario/);
+});
