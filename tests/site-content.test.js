@@ -293,3 +293,63 @@ test("article uses the approved direct headline system", () => {
     assert.ok(html.includes(headline), `missing direct headline: ${headline}`);
   }
 });
+
+test("discovery metadata centers the VLA Roofline result", () => {
+  const html = read("cloud-drive/index.html");
+
+  for (const term of [
+    /VLA inference/i,
+    /Roofline GPU model/i,
+    /HBM|GPU memory bandwidth/i,
+    /autoregressive decoding/i,
+    /compute latency/i,
+  ]) {
+    assert.match(html, term);
+  }
+
+  const jsonLdMatch = html.match(
+    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
+  );
+  assert.ok(jsonLdMatch, "JSON-LD block is missing");
+  const graph = JSON.parse(jsonLdMatch[1])["@graph"];
+  const article = graph.find((node) => node["@type"] === "ScholarlyArticle");
+  assert.match(article.description, /Roofline GPU model/);
+  assert.match(article.description, /HBM-bound autoregressive VLA decoding/);
+  assert.ok(article.keywords.includes("VLA inference latency"));
+  assert.ok(article.keywords.includes("GPU memory bandwidth"));
+});
+
+test("visible and structured FAQ explain the same Roofline result", () => {
+  const html = read("cloud-drive/index.html");
+  const question = "What does the Roofline model show for VLA inference?";
+  const answer =
+    "It separates GPU arithmetic time from the time spent reading model " +
+    "weights from high-bandwidth memory (HBM). In the paper's 2025 " +
+    "example, autoregressive decoding adds about 114 ms and dominates " +
+    "the compute gate. Faster 5G or 6G does not remove that GPU memory delay.";
+
+  assert.ok(html.includes(`<summary>${question}</summary>`));
+  assert.ok(html.includes(answer.replace("114 ms", "114&nbsp;ms")));
+
+  const jsonLdMatch = html.match(
+    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
+  );
+  const graph = JSON.parse(jsonLdMatch[1])["@graph"];
+  const faq = graph.find((node) => node["@type"] === "FAQPage");
+  const roofline = faq.mainEntity.find((item) => item.name === question);
+  assert.equal(roofline.acceptedAnswer.text, answer);
+});
+
+test("homepage leads with the VLA memory-bandwidth result", () => {
+  const html = read("index.html");
+  assert.match(
+    html,
+    /near-term cloud VLA inference is often limited by GPU memory bandwidth/i
+  );
+  assert.match(html, /even after 5G\/6G can carry the workload/i);
+  assert.match(html, /href="cloud-drive\/">Explore the interactive article/);
+  assert.match(
+    html,
+    /href="https:\/\/arxiv\.org\/pdf\/2607\.09045">Read the paper/
+  );
+});
