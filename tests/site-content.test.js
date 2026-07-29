@@ -27,3 +27,47 @@ test("all ten official paper figures are present and non-empty", () => {
     assert.match(fs.readFileSync(absolute, "utf8"), /<svg[\s>]/);
   }
 });
+
+test("Cloud Drive article exposes semantic research and discovery metadata", () => {
+  const html = read("cloud-drive/index.html");
+  assert.match(
+    html,
+    /<title>Can the Cloud Drive\? Interactive 5G\/6G Study \| Pouya Parsa<\/title>/
+  );
+  assert.match(
+    html,
+    /rel="canonical" href="https:\/\/pouya-parsa\.github\.io\/cloud-drive\/"/
+  );
+  assert.match(html, /name="citation_title"/);
+  assert.match(html, /name="citation_arxiv_id" content="2607\.09045"/);
+  assert.match(html, /"@type":\s*"ScholarlyArticle"/);
+  assert.match(html, /"@type":\s*"FAQPage"/);
+  for (const id of [
+    "answer",
+    "three-gates",
+    "simulator",
+    "strategies",
+    "figures",
+    "findings",
+    "limitations",
+    "faq",
+    "citation",
+  ]) {
+    assert.match(html, new RegExp(`id="${id}"`), `missing #${id}`);
+  }
+});
+
+test("Cloud Drive article includes all ten captioned figures", () => {
+  const html = read("cloud-drive/index.html");
+  for (let index = 1; index <= 10; index += 1) {
+    const padded = String(index).padStart(2, "0");
+    assert.match(html, new RegExp(`id="figure-${index}"`));
+    assert.match(
+      html,
+      new RegExp(`src="../images/cloud-drive/figure-${padded}\\.svg"`)
+    );
+    assert.match(html, new RegExp(`Figure ${index}:`));
+  }
+  assert.equal((html.match(/<figure\b/g) || []).length, 10);
+  assert.equal((html.match(/class="figure-why"/g) || []).length, 10);
+});

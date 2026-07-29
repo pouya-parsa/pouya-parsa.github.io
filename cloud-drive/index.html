@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Can the Cloud Drive? Interactive 5G/6G Study | Pouya Parsa</title>
+    <meta name="description" content="Explore when autonomous-driving inference can move to the cloud across 5G, 5G-Advanced, and 6G—with an interactive feasibility simulator and all ten paper figures.">
+    <meta name="author" content="Pouya Parsa">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://pouya-parsa.github.io/cloud-drive/">
+
+    <meta name="citation_title" content="Can the Cloud Drive? Infrastructure Feasibility of Offloading Autonomous Driving Across 5G and 6G">
+    <meta name="citation_author" content="Parsa, Pouya">
+    <meta name="citation_author" content="Han, Kawon">
+    <meta name="citation_author" content="Choi, Seongjin">
+    <meta name="citation_publication_date" content="2026/07/10">
+    <meta name="citation_arxiv_id" content="2607.09045">
+    <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2607.09045">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://pouya-parsa.github.io/cloud-drive/">
+    <meta property="og:title" content="Can the Cloud Drive? An Interactive 5G/6G Study">
+    <meta property="og:description" content="Communication binds first, compute latency second, and economics last. Explore the paper's NYC scenarios and all ten figures.">
+    <meta property="article:published_time" content="2026-07-10">
+
+    <link rel="stylesheet" href="../css/cloud-drive.css">
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "ScholarlyArticle",
+            "@id": "https://pouya-parsa.github.io/cloud-drive/#paper",
+            "headline": "Can the Cloud Drive? Infrastructure Feasibility of Offloading Autonomous Driving Across 5G and 6G",
+            "name": "Can the Cloud Drive? Infrastructure Feasibility of Offloading Autonomous Driving Across 5G and 6G",
+            "description": "An analytical framework coupling communication limits, a roofline GPU service model, stochastic latency, and utilization-aware cost across autonomous-driving model classes, offloading strategies, and communication generations in New York City.",
+            "datePublished": "2026-07-10",
+            "identifier": "arXiv:2607.09045",
+            "url": "https://pouya-parsa.github.io/cloud-drive/",
+            "sameAs": "https://arxiv.org/abs/2607.09045",
+            "encoding": {
+              "@type": "MediaObject",
+              "contentUrl": "https://arxiv.org/pdf/2607.09045",
+              "encodingFormat": "application/pdf"
+            },
+            "author": [
+              {
+                "@id": "https://pouya-parsa.github.io/#pouya-parsa"
+              },
+              {
+                "@type": "Person",
+                "name": "Kawon Han"
+              },
+              {
+                "@type": "Person",
+                "name": "Seongjin Choi"
+              }
+            ],
+            "keywords": [
+              "vehicular edge computing",
+              "task offloading",
+              "autonomous driving",
+              "5G",
+              "6G",
+              "vision-language-action models",
+              "cloud inference"
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://pouya-parsa.github.io/#pouya-parsa",
+            "name": "Pouya Parsa",
+            "url": "https://pouya-parsa.github.io/",
+            "affiliation": {
+              "@type": "CollegeOrUniversity",
+              "name": "University of Minnesota Twin Cities"
+            },
+            "sameAs": "https://github.com/pouya-parsa"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Pouya Parsa",
+                "item": "https://pouya-parsa.github.io/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Can the Cloud Drive?",
+                "item": "https://pouya-parsa.github.io/cloud-drive/"
+              }
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://pouya-parsa.github.io/cloud-drive/#faq-schema",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Can the cloud drive an autonomous vehicle?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Conditionally. The selected offloading strategy must first fit the cellular uplink, then satisfy the closed-loop latency budget. Only a branch that passes both gates should be compared economically with full onboard compute."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why does not faster 6G solve the whole problem?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "More bandwidth cannot remove the memory-bandwidth-bound autoregressive decode time of a vision-language-action model. In the paper, communication, compute latency, and cost bind in sequence."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is feature-level offloading, or S2?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "S2 keeps the vision backbone in the vehicle and uploads compressed intermediate features. It uses much less uplink than raw-sensor offloading while moving more expensive reasoning and planning work to shared infrastructure."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the difference between the 100 ms and 300 ms tiers?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The 100 ms tier is the reactive control loop. The 300 ms tier is deliberative planning and is admissible only behind an onboard reactive controller that can act locally within 100 ms."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is this simulator a deployment or safety-certification tool?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. It is an interactive explainer of the analytical assumptions and discrete scenario space published in arXiv:2607.09045v1."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to the article</a>
+
+    <header class="article-header">
+      <a class="article-brand" href="../" aria-label="Pouya Parsa homepage">
+        <span class="brand-mark" aria-hidden="true">PP</span>
+        <span>Pouya Parsa</span>
+      </a>
+      <nav aria-label="Article navigation">
+        <a href="#three-gates">The three gates</a>
+        <a href="#simulator">Simulator</a>
+        <a href="#figures">Figures</a>
+        <a href="https://arxiv.org/pdf/2607.09045">Paper ↗</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <article>
+        <header class="hero" id="top">
+          <div class="hero-inner">
+            <p class="eyebrow">Interactive research article <span aria-hidden="true">·</span> July 2026</p>
+            <h1>Can the Cloud <em>Drive?</em></h1>
+            <p class="hero-deck">Infrastructure feasibility of offloading autonomous driving across 5G and 6G.</p>
+            <p class="authors"><strong>Pouya Parsa</strong>, Kawon Han, and Seongjin Choi</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#simulator">Test a scenario</a>
+              <a class="button button-ghost" href="https://arxiv.org/abs/2607.09045">Read on arXiv ↗</a>
+            </div>
+
+            <ol class="gate-rail" aria-label="Three sequential feasibility gates">
+              <li>
+                <span class="gate-number">01</span>
+                <strong>Communication</strong>
+                <small>Can the workload reach the cloud?</small>
+              </li>
+              <li>
+                <span class="gate-number">02</span>
+                <strong>Compute</strong>
+                <small>Can a decision return in time?</small>
+              </li>
+              <li>
+                <span class="gate-number">03</span>
+                <strong>Cost</strong>
+                <small>Does sharing beat onboard hardware?</small>
+              </li>
+            </ol>
+          </div>
+        </header>
+
+        <section class="answer-section" id="answer" aria-labelledby="answer-heading">
+          <div class="section-kicker">The short answer</div>
+          <h2 id="answer-heading">Can autonomous-driving inference move to the cloud?</h2>
+          <p class="answer-lead"><strong>Yes—but only conditionally, and in a specific order.</strong> In dense cities, the uplink must carry the offloaded workload first. The cloud must then return a decision within either a 100&nbsp;ms reactive loop or a 300&nbsp;ms deliberative tier backed by a local reactive controller. Only after both gates pass does shared cloud compute become an economic question.</p>
+          <aside class="answer-note">
+            <span>Core finding</span>
+            <p>Latency decides which model is admissible in which year; cost decides whether it is economical.</p>
+          </aside>
+        </section>
+
+        <section class="story-section" id="three-gates" aria-labelledby="gates-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">The result in one sequence</p>
+              <h2 id="gates-heading">Three constraints bind—one after another.</h2>
+            </div>
+            <p>The paper links a driving-model split, the cellular access network, and cloud GPU service into one deployment question. A branch must clear each gate before the next one matters.</p>
+          </div>
+
+          <div class="gate-stories">
+            <article class="gate-story communication">
+              <p class="gate-label">Gate 01 <span>Communication-bound</span></p>
+              <h3>Dense cells run out of uplink first.</h3>
+              <p>Cloud driving reverses normal mobile traffic: the difficult flow is upstream. Raw sensors require 100&nbsp;Mbps per vehicle, compressed features 25&nbsp;Mbps, and compact queries 3&nbsp;Mbps. As more vehicles share a cell, bandwidth is divided and interference lowers spectral efficiency.</p>
+              <p class="gate-takeaway">At the NYC reference point—10% AV penetration and 45% utilization—plain 5G already fails feature-level offloading. 5G-Advanced is the practical threshold; 6G adds headroom.</p>
+              <a href="#figure-7">See the NYC communication map →</a>
+            </article>
+
+            <article class="gate-story compute">
+              <p class="gate-label">Gate 02 <span>Compute-bound</span></p>
+              <h3>More bandwidth cannot outrun a memory wall.</h3>
+              <p>On 2025 hardware, the deterministic vision-language-action (VLA) floor is 132–164&nbsp;ms before network or queueing delay. Autoregressive decode alone is about 114&nbsp;ms because each generated token rereads model weights from high-bandwidth memory (HBM).</p>
+              <p class="gate-takeaway">The floor first clears 100&nbsp;ms around 2027. After access-network tails are added, 6G admits dense VLA-S2 around 2028; 5G-Advanced does not clear the same reactive corridor.</p>
+              <a href="#figure-8">Inspect the latency decomposition →</a>
+            </article>
+
+            <article class="gate-story cost">
+              <p class="gate-label">Gate 03 <span>Cost-bound</span></p>
+              <h3>Only feasible branches earn a cost comparison.</h3>
+              <p>Onboard hardware is purchased for every vehicle, even when it is parked. Cloud GPUs are pooled across vehicles that are active at the same moment. This asymmetry matters most for VLA hardware, whose reference baseline reaches $8,500 per vehicle-year.</p>
+              <p class="gate-takeaway">Once admissible, low- and moderate-utilization VLA fleets gain the most. Feature-level offloading (S2) is where the cost advantage concentrates.</p>
+              <a href="#figure-10">Explore the cost-ratio map →</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="simulator-section" id="simulator" aria-labelledby="simulator-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Interactive model</p>
+              <h2 id="simulator-heading">Which gate binds your scenario?</h2>
+            </div>
+            <p>Choose values from the paper’s 1,296-branch scenario grid. Results are analytical estimates from arXiv:2607.09045v1—not production safety guidance.</p>
+          </div>
+
+          <div class="simulator-shell">
+            <form id="scenario-form">
+              <fieldset>
+                <legend>Choose a published scenario</legend>
+                <div class="control-grid">
+                  <label for="scenario-model">Model class
+                    <select id="scenario-model" name="model">
+                      <option>E2E</option>
+                      <option>VLM</option>
+                      <option selected>VLA</option>
+                    </select>
+                  </label>
+                  <label for="scenario-strategy">Offloading strategy
+                    <select id="scenario-strategy" name="strategy">
+                      <option>S1</option>
+                      <option selected>S2</option>
+                      <option>S3</option>
+                    </select>
+                  </label>
+                  <label for="scenario-generation">Communication
+                    <select id="scenario-generation" name="generation">
+                      <option>5G</option>
+                      <option selected>5G-Advanced</option>
+                      <option>6G</option>
+                    </select>
+                  </label>
+                  <label for="scenario-budget">Latency tier
+                    <select id="scenario-budget" name="budgetMs">
+                      <option value="100" selected>100 ms reactive</option>
+                      <option value="300">300 ms deliberative*</option>
+                    </select>
+                  </label>
+                  <label for="scenario-penetration">AV penetration
+                    <select id="scenario-penetration" name="penetration">
+                      <option>0.1</option>
+                      <option>1</option>
+                      <option>5</option>
+                      <option selected>10</option>
+                      <option>20</option>
+                      <option>30</option>
+                      <option>50</option>
+                      <option>100</option>
+                    </select>
+                  </label>
+                  <label for="scenario-utilization">Vehicle utilization
+                    <select id="scenario-utilization" name="utilization">
+                      <option>0.05</option>
+                      <option>0.12</option>
+                      <option>0.3</option>
+                      <option selected>0.45</option>
+                      <option>0.65</option>
+                      <option>1</option>
+                    </select>
+                  </label>
+                </div>
+                <label class="year-control" for="scenario-year">
+                  <span>GPU year <output for="scenario-year">2028</output></span>
+                  <input id="scenario-year" name="year" type="range" min="2025" max="2040" step="1" value="2028">
+                </label>
+                <p class="form-note">* The 300&nbsp;ms deliberative tier requires an onboard controller that still closes the 100&nbsp;ms reactive loop.</p>
+              </fieldset>
+            </form>
+
+            <section class="scenario-result" id="scenario-result" aria-live="polite" aria-label="Scenario result">
+              <div class="result-intro">
+                <p class="result-eyebrow">Reference scenario</p>
+                <h3 id="binding-summary">Compute is the first binding gate.</h3>
+                <p>VLA · S2 · 5G-Advanced · 10% penetration · 45% utilization · 2028</p>
+              </div>
+              <ol class="result-gates">
+                <li class="gate-result" id="gate-communication" data-state="pass">
+                  <span>01</span>
+                  <div>
+                    <p>Communication</p>
+                    <strong class="gate-status">Pass</strong>
+                    <small class="gate-detail">9.9 active vehicles/cell; 25 Mbps target uplink.</small>
+                  </div>
+                </li>
+                <li class="gate-result" id="gate-compute" data-state="fail">
+                  <span>02</span>
+                  <div>
+                    <p>Compute + tail latency</p>
+                    <strong class="gate-status">Does not pass</strong>
+                    <small class="gate-detail">The deterministic floor clears 100 ms, but the loaded 5G-Advanced scheduling tail does not.</small>
+                  </div>
+                </li>
+                <li class="gate-result" id="gate-cost" data-state="blocked">
+                  <span>03</span>
+                  <div>
+                    <p>Cost</p>
+                    <strong class="gate-status">Not evaluated</strong>
+                    <small class="gate-detail">Cost is withheld until communication and latency both pass.</small>
+                  </div>
+                </li>
+              </ol>
+              <p class="scenario-caveats" id="scenario-caveats">Analytical estimate based on the paper’s NYC fleet, cell-count, hardware-evolution, and cost assumptions.</p>
+            </section>
+          </div>
+
+          <noscript>
+            <p class="noscript-note"><strong>Static reference scenario:</strong> For VLA-S2 over 5G-Advanced at 10% penetration, 0.45 utilization, and the 100&nbsp;ms reactive tier in 2028, communication passes but the dense-cell latency tail does not. Cost is therefore not evaluated. Enable JavaScript to explore the paper’s other scenarios.</p>
+          </noscript>
+        </section>
+
+        <section class="strategy-section" id="strategies" aria-labelledby="strategies-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Where should the pipeline split?</p>
+              <h2 id="strategies-heading">Three offloading strategies trade bandwidth for onboard compute.</h2>
+            </div>
+          </div>
+          <div class="strategy-grid">
+            <article>
+              <p class="strategy-code">S1 <span>Raw sensor</span></p>
+              <h3>Most cloud, most uplink</h3>
+              <p class="strategy-metric"><strong>100</strong> Mbps</p>
+              <p>Uploads camera, LiDAR, and radar streams. It leaves only encoding onboard, but dense cells reach the communication cliff early.</p>
+            </article>
+            <article class="recommended">
+              <p class="strategy-code">S2 <span>Feature level</span></p>
+              <h3>The robust middle</h3>
+              <p class="strategy-metric"><strong>25</strong> Mbps</p>
+              <p>Keeps the vision backbone local and offloads compressed features. This is where VLA feasibility and the cost crossover concentrate.</p>
+            </article>
+            <article>
+              <p class="strategy-code">S3 <span>Query level</span></p>
+              <h3>Least uplink, most onboard</h3>
+              <p class="strategy-metric"><strong>3</strong> Mbps</p>
+              <p>Uploads compact scene queries after the transformer encoder. It is easiest on the network but preserves much of the vehicle hardware cost.</p>
+            </article>
+          </div>
+          <div class="strategy-table-wrap" tabindex="0" aria-label="Scrollable offloading strategy comparison">
+            <table>
+              <caption>Published strategy inputs by model class</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Strategy</th>
+                  <th scope="col">Experimental uplink</th>
+                  <th scope="col">Residual TOPS: E2E / VLM / VLA</th>
+                  <th scope="col">Cloud TFLOPs: E2E / VLM / VLA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">S1</th><td>100 Mbps</td><td>5 / 5 / 5</td><td>1.7 / 24.7 / 60.0</td></tr>
+                <tr><th scope="row">S2</th><td>25 Mbps</td><td>16 / 226 / 550</td><td>1.39 / 20.17 / 49.0</td></tr>
+                <tr><th scope="row">S3</th><td>3 Mbps</td><td>82 / 1194 / 2900</td><td>0.06 / 0.82 / 2.0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="figures-section" id="figures" aria-labelledby="figures-heading">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">The complete visual evidence</p>
+              <h2 id="figures-heading">Explore all ten paper figures.</h2>
+            </div>
+            <p>Every chart and diagram below comes from the official arXiv source. Captions preserve the paper’s conditions; the added note explains the role each figure plays in the argument.</p>
+          </div>
+
+          <div class="figure-grid">
+            <figure class="figure-card" id="figure-1">
+              <a class="figure-image-link" href="../images/cloud-drive/figure-01.svg" aria-label="Open full-size Figure 1">
+                <img src="../images/cloud-drive/figure-01.svg" alt="Flowchart linking the communication gate, GPU service and latency models, joint feasibility, infrastructure optimization, and cost crossover." loading="lazy">
+              </a>
+              <figcaption><strong>Figure 1:</strong> Analytical pipeline. The Communication Requirements Model defines the communication-side limit, and the GPU Service Model defines the cloud-side service model used by the Stochastic Latency Model. Those results then feed the Feasibility Threshold; feasible branches proceed to edge infrastructure optimization and are finally compared through the Total Cost of Ownership and Crossover step.</figcaption>
+              <p class="figure-why"><strong>Why it matters:</strong> The economics are intentionally last. An attractive price cannot rescue a branch that fails the uplink or timing constraints.</p>
+            </figure>
+
+            <figure class="figure-card" id="figure-2">
+              <a class="figure-image-link" href="../images/cloud-drive/figure-02.svg" aria-label="Open full-size Figure 2">
+                <img src="../images/cloud-drive/figure-02.svg" alt="Four pipeline rows show S1, S2, S3, and the onboard baseline, with progressively more processing kept inside the vehicle." loading="lazy">
+              </a>
+              <figcaption><strong>Figure 2:</strong> Offloading strategy spectrum.</figcaption>
+              <p class="figure-why"><strong>Why it matters:</strong> Moving the split toward the vehicle reduces uplink demand but preserves more expensive onboard compute.</p>
+            </figure>
+
+            <figure class="figure-card" id="figure-3">
+              <a class="figure-image-link" href="../images/cloud-drive/figure-03.svg" aria-label="Open full-size Figure 3">
+                <img src="../images/cloud-drive/figure-03.svg" alt="Log-scale chart where rising S1, S2, and S3 aggregate uplink demand intersects declining per-user capacity for 5G, 5G-Advanced, and 6G." loading="lazy">
+              </a>
+              <figcaption><strong>Figure 3:</strong> Bandwidth-capacity tradeoff. Colored lines show the required uplink demand for S1–S3 as vehicles per cell increase, while gray generation curves show the available uplink capacity under the interference-aware cell model. Intersections mark the maximum bandwidth-feasible vehicles per cell.</figcaption>
+              <p class="figure-why"><strong>Why it matters:</strong> Capacity falls as demand rises, creating a hard admission boundary rather than a gentle performance slowdown.</p>
+            </figure>
+
+            <figure class="figure-card" id="figure-4">
+              <a class="figure-image-link" href="../images/cloud-drive/figure-04.svg" aria-label="Open full-size Figure 4">
+                <img src="../images/cloud-drive/figure-04.svg" alt="Vehicle, network, and cloud layers show deterministic sensing, encoding, inference, and actuation beside stochastic scheduling, routing, queueing, uplink, and downlink delay." loading="lazy">
+              </a>
+              <figcaption><strong>Figure 4:</strong> End-to-end control loop delay decomposition. Solid borders denote deterministic components; dashed borders denote stochastic components that consume the remaining latency slack.</figcaption>
+              <p class="figure-why"><strong>Why it matters:</strong> The inference floor is only part of the loop; rare network and queue delays must fit inside whatever budget remains.</p>
+            </figure>
+
+            <figure class="figure-card" id="figure-5">
+              <a class="figure-image-link" href="../images/cloud-drive/figure-05.svg" aria-label="Open full-size Figure 5">
+                <img src="../images/cloud-drive/figure-05.svg" alt="Tail latency curves for S1, S2, and S3 stay low before rising sharply through the 100 millisecond and 300 millisecond budgets as vehicles per cell increase." loading="lazy">
+              </a>
+              <figcaption><strong>Figure 5:</strong> Tail latency under increasing cell utilization. Curves show the 99.999th-percentile end-to-end loop delay under 5G-Advanced (compact E2E workload) as vehicles per cell increase for S1–S3. Horizontal lines mark the reactive 100&nbsp;ms and deliberative 300&nbsp;ms budgets. The sharp rise at high loading is the capacity cliff discussed in the text: stochastic network scheduling consumes the remaining budget Δ, so points above a budget fail the latency side of the feasibility screen.</figcaption>
+              <p class="figure-why"><strong>Why it matters:</strong> A branch can pass average capacity and still fail a safety-relevant tail-latency target near the loading cliff.</p>
+            </figure>
+
+            <figure class="figure-card" id="figure-6">
+              <a class="figure-image-link" href="../images/cloud-drive/figure-06.svg" aria-label="Open full-size Figure 6">
+                <img src="../images/cloud-drive/figure-06.svg" alt="Three panels compare maximum feasible New York City AV penetration by utilization for S1, S2, and S3 under 5G, 5G-Advanced, and 6G." loading="lazy">
+              </a>
+              <figcaption><strong>Figure 6:</strong> Case Study 1: NYC communication frontier. The y-axis gives the maximum citywide fleet penetration that remains bandwidth-feasible at each utilization. Reference points: 1% = 22K vehicles, 10% = 220K vehicles.</figcaption>
+              <p class="figure-why"><strong>Why it matters:</strong> The relevant load is concurrent vehicles per cell, so utilization can move the feasible citywide fleet boundary dramatically.</p>
+            </figure>
+
+            <figure class="figure-card" id="figure-7">
+              <a class="figure-image-link" href="../images/cloud-drive/figure-07.svg" aria-label="Open full-size Figure 7">
+                <img src="../images/cloud-drive/figure-07.svg" alt="Three colored grids show the minimum communication generation needed for each penetration and utilization combination under S1, S2, and S3." loading="lazy">
+              </a>
+              <figcaption><strong>Figure 7:</strong> Case Study 1: NYC communication sweep. Each cell shows the minimum communication generation required to keep a strategy bandwidth-feasible for the given AV penetration and utilization pair. The highlighted cell corresponds to the reference point of 10% penetration and u = 0.45.</figcaption>
+              <p class="figure-why"><strong>Why it matters:</strong> S2 occupies the useful middle: far less network pressure than S1 without surrendering most of the cloud-compute saving as S3 does.</p>
+            </figure>
+
+            <figure class="figure-card figure-wide" id="figure-8">
+              <a class="figure-image-link" href="../images/cloud-drive/figure-08.svg" aria-label="Open full-size Figure 8">
+                <img src="../images/cloud-drive/figure-08.svg" alt="The left panel shows VLA deterministic latency dropping below 100 milliseconds after 2026; the right panel shows memory-bandwidth-bound decode dominating the VLA-S2 floor." loading="lazy">
+              </a>
+              <figcaption><strong>Figure 8:</strong> Regime 2 (compute-bound). (a) Deterministic latency floor versus GPU year for VLA (S1–S3), with VLM-S2 and E2E-S2 references; the reactive 100&nbsp;ms and deliberative 300&nbsp;ms budgets are marked. The VLA floor first drops below 100&nbsp;ms in 2027, but this is a lower bound: once the access-scheduling tail is added, reactive admissibility is later and generation-dependent. (b) Decomposition of the VLA-S2 floor: the decode term is HBM-bandwidth-bound and dominates the wall, so it shrinks only with memory bandwidth, not arithmetic throughput.</figcaption>
+              <p class="figure-why"><strong>Why it matters:</strong> 6G can remove an uplink bottleneck, but it cannot make an autoregressive decoder read model weights faster.</p>
+            </figure>
+
+            <figure class="figure-card figure-wide" id="figure-9">
+              <a class="figure-image-link" href="../images/cloud-drive/figure-09.svg" aria-label="Open full-size Figure 9">
+                <img src="../images/cloud-drive/figure-09.svg" alt="A nine-panel cost chart compares onboard and S1, S2, and S3 annual costs across E2E, VLM, VLA and three utilization levels, with infeasible segments dashed." loading="lazy">
+              </a>
+              <figcaption><strong>Figure 9:</strong> Regime 3 (cost-bound), reactive budget. NYC per-vehicle hybrid cost versus the in-vehicle baseline over time at 5G-Advanced. Rows: model classes. Columns: utilization. Solid curves are latency-feasible under the 100&nbsp;ms budget; dashed segments are latency-infeasible. VLA cloud (S2) falls below the $8,500 baseline once it clears the compute regime.</figcaption>
+              <p class="figure-why"><strong>Why it matters:</strong> The sharing advantage is weakest for inexpensive E2E hardware and strongest for costly, intermittently used VLA hardware.</p>
+            </figure>
+
+            <figure class="figure-card figure-wide" id="figure-10">
+              <a class="figure-image-link" href="../images/cloud-drive/figure-10.svg" aria-label="Open full-size Figure 10">
+                <img src="../images/cloud-drive/figure-10.svg" alt="Three cost-ratio heatmaps show the cheapest feasible strategy across penetration and utilization; green VLA cells are widespread and mostly labeled S2." loading="lazy">
+              </a>
+              <figcaption><strong>Figure 10:</strong> Regime 3 (cost-bound), deliberative tier in 2028, where VLA is latency-admissible. Cheapest feasible NYC cloud cost divided by the in-vehicle baseline; cell text gives the cheapest feasible strategy and gray cells are infeasible. Green marks cloud-cheaper cells. For VLA the cost-attractive region is large and dominated by S2.</figcaption>
+              <p class="figure-why"><strong>Why it matters:</strong> Once latency is relaxed behind a reactive fallback, S2 wins much of the VLA grid—but the fallback hardware makes this an optimistic economic bound.</p>
+            </figure>
+          </div>
+        </section>
+
+        <section class="findings-section" id="findings" aria-labelledby="findings-heading">
+          <p class="section-kicker">What the figures add up to</p>
+          <h2 id="findings-heading">Five findings to carry forward.</h2>
+          <ol class="finding-list">
+            <li><span>01</span><div><strong>Cloud driving is not one feasibility question.</strong><p>Communication, tail latency, and economics must be screened in order.</p></div></li>
+            <li><span>02</span><div><strong>5G-Advanced is the practical S2 threshold.</strong><p>Plain 5G loses feature-level headroom at the dense NYC reference point; 6G supports broader adoption.</p></div></li>
+            <li><span>03</span><div><strong>Near-term VLA is compute-bound under 100&nbsp;ms.</strong><p>The FP16 autoregressive decode is limited by HBM bandwidth, regardless of radio bandwidth.</p></div></li>
+            <li><span>04</span><div><strong>Utilization decides the economic crossover.</strong><p>Cloud pooling is most valuable when expensive peak hardware would otherwise sit idle in every vehicle.</p></div></li>
+            <li><span>05</span><div><strong>S2 is the robust middle—not a universal optimum.</strong><p>It avoids S1’s uplink extreme and S3’s residual-hardware extreme across much of the study grid.</p></div></li>
+          </ol>
+        </section>
+
+        <section class="limitations-section" id="limitations" aria-labelledby="limitations-heading">
+          <div>
+            <p class="section-kicker">Read the boundary conditions</p>
+            <h2 id="limitations-heading">What this analysis does not claim.</h2>
+          </div>
+          <div class="limitations-grid">
+            <article><h3>Not a safety case</h3><p>Every cloud-dependent architecture adds outage, edge-site, and latency-spike failure modes. A deliberative result never removes the need for local reactive control.</p></article>
+            <article><h3>6G values are targets</h3><p>The 6G parameters use ITU IMT-2030 aspirations, not guaranteed deployed performance.</p></article>
+            <article><h3>Architecture can shift the wall</h3><p>FP8, speculative decoding, distillation, or parallel action decoders could move the VLA timing boundary earlier.</p></article>
+            <article><h3>NYC averages hide hotspots</h3><p>Rush-hour corridors may see several times the average cell load even when a citywide scenario appears feasible.</p></article>
+            <article><h3>Costs are analytical estimates</h3><p>Energy is excluded and marginal cost crossovers could move later. The simulator explains the paper’s assumptions; it does not rerun a live infrastructure bid.</p></article>
+            <article><h3>Versioned evidence</h3><p>This article follows arXiv:2607.09045v1, submitted 10 July 2026. Later paper versions may revise parameters or results.</p></article>
+          </div>
+        </section>
+
+        <section class="faq-section" id="faq" aria-labelledby="faq-heading">
+          <p class="section-kicker">Frequently asked questions</p>
+          <h2 id="faq-heading">Quick answers about cloud driving.</h2>
+          <div class="faq-list">
+            <details>
+              <summary>Can the cloud drive an autonomous vehicle?</summary>
+              <p>Conditionally. The selected offloading strategy must first fit the cellular uplink, then satisfy the closed-loop latency budget. Only a branch that passes both gates should be compared economically with full onboard compute.</p>
+            </details>
+            <details>
+              <summary>Why doesn’t faster 6G solve the whole problem?</summary>
+              <p>More bandwidth cannot remove the memory-bandwidth-bound autoregressive decode time of a vision-language-action model. In the paper, communication, compute latency, and cost bind in sequence.</p>
+            </details>
+            <details>
+              <summary>What is feature-level offloading, or S2?</summary>
+              <p>S2 keeps the vision backbone in the vehicle and uploads compressed intermediate features. It uses much less uplink than raw-sensor offloading while moving more expensive reasoning and planning work to shared infrastructure.</p>
+            </details>
+            <details>
+              <summary>What is the difference between the 100&nbsp;ms and 300&nbsp;ms tiers?</summary>
+              <p>The 100&nbsp;ms tier is the reactive control loop. The 300&nbsp;ms tier is deliberative planning and is admissible only behind an onboard reactive controller that can act locally within 100&nbsp;ms.</p>
+            </details>
+            <details>
+              <summary>Is this simulator a deployment or safety-certification tool?</summary>
+              <p>No. It is an interactive explainer of the analytical assumptions and discrete scenario space published in arXiv:2607.09045v1.</p>
+            </details>
+          </div>
+        </section>
+
+        <section class="citation-section" id="citation" aria-labelledby="citation-heading">
+          <div>
+            <p class="section-kicker">Go to the source</p>
+            <h2 id="citation-heading">Read and cite the paper.</h2>
+            <p>The preprint contains the complete analytical framework, equations, parameter tables, literature review, and policy discussion.</p>
+            <div class="citation-actions">
+              <a class="button button-primary" href="https://arxiv.org/pdf/2607.09045">Download the PDF ↗</a>
+              <a class="button button-secondary" href="https://arxiv.org/abs/2607.09045">Open the abstract ↗</a>
+            </div>
+          </div>
+          <div class="bibtex-card">
+            <p>BibTeX</p>
+            <pre id="bibtex"><code>@article{parsa2026cloud,
+  title={Can the Cloud Drive? Infrastructure Feasibility of Offloading Autonomous Driving Across 5G and 6G},
+  author={Parsa, Pouya and Han, Kawon and Choi, Seongjin},
+  journal={arXiv preprint arXiv:2607.09045},
+  year={2026}
+}</code></pre>
+          </div>
+        </section>
+      </article>
+    </main>
+
+    <footer class="article-footer">
+      <p>© 2026 Pouya Parsa</p>
+      <p><a href="../">Back to the portfolio</a> <span aria-hidden="true">·</span> <a href="#top">Back to top</a></p>
+    </footer>
+  </body>
+</html>
