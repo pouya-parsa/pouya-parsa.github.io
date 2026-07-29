@@ -79,9 +79,9 @@ export function auditHtmlPage({ html, fetchUrl, policy }) {
       content($, `meta[name="${name}"]`),
     ])
   );
-  const missingAlt = $("img").filter((_, image) => {
+  const missingAlt = $("img[src]").filter((_, image) => {
     const alt = $(image).attr("alt");
-    return alt === undefined || alt.trim() === "";
+    return alt === undefined;
   }).length;
   const { nodes, errors } = collectJsonLdNodes($);
   const types = schemaTypes(nodes);

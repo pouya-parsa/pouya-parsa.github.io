@@ -177,6 +177,21 @@ test("missing same-page fragment target fails", () => {
   assert.ok(failedIds(result).includes("fragment.missing-section"));
 });
 
+test("explicit empty alt on an uninitialized dialog image is allowed", () => {
+  const withDialogImage = validArticleHtml.replace(
+    "</body>",
+    '<dialog><img id="dialog-image" alt=""></dialog></body>'
+  );
+
+  const result = auditHtmlPage({
+    html: withDialogImage,
+    fetchUrl: articlePolicy.fetchUrl,
+    policy: articlePolicy,
+  });
+
+  assert.equal(failedIds(result).includes("images.alt"), false);
+});
+
 test("duplicate page titles fail the cross-page check", () => {
   const pages = [validHomepageHtml, validHomepageHtml].map((html, index) =>
     auditHtmlPage({
