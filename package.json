@@ -8,6 +8,7 @@
     "monitor:lighthouse:assert": "lhci assert --config=lighthouserc.cjs",
     "monitor:lighthouse:upload": "lhci upload --config=lighthouserc.cjs",
     "monitor:lighthouse:summary": "node scripts/lighthouse-summary.mjs",
+    "monitor:traffic": "node scripts/traffic-report.mjs",
     "analytics:worker:dry-run": "WRANGLER_WRITE_LOGS=false wrangler deploy --dry-run --config workers/site-events/wrangler.jsonc",
     "analytics:worker:startup": "WRANGLER_WRITE_LOGS=false wrangler check startup --args=--config=workers/site-events/wrangler.jsonc --outfile=/tmp/pouya-site-events-startup.cpuprofile"
   },
