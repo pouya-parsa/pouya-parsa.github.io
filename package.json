@@ -7,14 +7,17 @@
     "monitor:lighthouse:collect": "lhci collect --config=lighthouserc.cjs",
     "monitor:lighthouse:assert": "lhci assert --config=lighthouserc.cjs",
     "monitor:lighthouse:upload": "lhci upload --config=lighthouserc.cjs",
-    "monitor:lighthouse:summary": "node scripts/lighthouse-summary.mjs"
+    "monitor:lighthouse:summary": "node scripts/lighthouse-summary.mjs",
+    "analytics:worker:dry-run": "WRANGLER_WRITE_LOGS=false wrangler deploy --dry-run --config workers/site-events/wrangler.jsonc",
+    "analytics:worker:startup": "WRANGLER_WRITE_LOGS=false wrangler check startup --args=--config=workers/site-events/wrangler.jsonc --outfile=/tmp/pouya-site-events-startup.cpuprofile"
   },
   "dependencies": {
     "cheerio": "1.2.0",
     "robots-parser": "3.0.1"
   },
   "devDependencies": {
-    "@lhci/cli": "0.15.1"
+    "@lhci/cli": "0.15.1",
+    "wrangler": "^4.115.0"
   },
   "engines": {
     "node": ">=22"

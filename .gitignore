@@ -5,3 +5,4 @@ test.css
 node_modules/
 .monitoring/
 .lighthouseci/
+.wrangler/
