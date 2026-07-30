@@ -210,6 +210,33 @@ test("Figure 1 preview preserves its light canvas background", () => {
   );
 });
 
+test("Figure 8 preview preserves readable axis labels", () => {
+  const preview = path.join(
+    root,
+    "images/cloud-drive/figure-08-preview.webp"
+  );
+  const cropArguments = [
+    preview,
+    "-crop",
+    "1x1+340+470",
+    "-depth",
+    "8",
+    "rgb:-",
+  ];
+  let result = spawnSync("magick", cropArguments);
+
+  if (result.error?.code === "ENOENT") {
+    result = spawnSync("convert", cropArguments);
+  }
+
+  assert.equal(result.error, undefined, "ImageMagick is required for image tests");
+  assert.equal(result.status, 0, result.stderr.toString());
+  assert.ok(
+    [...result.stdout.subarray(0, 3)].every((channel) => channel <= 80),
+    "Figure 8's x-axis label must remain visible in the optimized preview"
+  );
+});
+
 test("Cloud Drive article exposes semantic research and discovery metadata", () => {
   const html = read("cloud-drive/index.html");
   assert.match(
