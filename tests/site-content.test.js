@@ -1,5 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const { spawnSync } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
 
@@ -180,6 +181,33 @@ test("article uses lightweight previews above the fold", () => {
       `${preview.file} exceeds its performance budget`
     );
   }
+});
+
+test("Figure 1 preview preserves its light canvas background", () => {
+  const preview = path.join(
+    root,
+    "images/cloud-drive/figure-01-preview.webp"
+  );
+  const cropArguments = [
+    preview,
+    "-crop",
+    "1x1+10+500",
+    "-depth",
+    "8",
+    "rgb:-",
+  ];
+  let result = spawnSync("magick", cropArguments);
+
+  if (result.error?.code === "ENOENT") {
+    result = spawnSync("convert", cropArguments);
+  }
+
+  assert.equal(result.error, undefined, "ImageMagick is required for image tests");
+  assert.equal(result.status, 0, result.stderr.toString());
+  assert.ok(
+    [...result.stdout.subarray(0, 3)].every((channel) => channel >= 250),
+    "the whitespace around Figure 1 must render white, not black"
+  );
 });
 
 test("Cloud Drive article exposes semantic research and discovery metadata", () => {
