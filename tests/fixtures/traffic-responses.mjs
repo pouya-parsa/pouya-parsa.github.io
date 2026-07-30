@@ -49,3 +49,64 @@ export const searchQueries = {
     },
   ],
 };
+
+export const cloudflareRum = {
+  data: {
+    viewer: {
+      accounts: [
+        {
+          total: [
+            { count: 12, avg: { sampleInterval: 1 }, sum: { visits: 8 } },
+          ],
+          topPaths: [
+            {
+              count: 7,
+              avg: { sampleInterval: 1 },
+              sum: { visits: 5 },
+              dimensions: { requestPath: "/cloud-drive/" },
+            },
+          ],
+          topReferrers: [
+            {
+              count: 3,
+              avg: { sampleInterval: 1 },
+              sum: { visits: 2 },
+              dimensions: { refererHost: "chatgpt.com" },
+            },
+            {
+              count: 4,
+              avg: { sampleInterval: 1 },
+              sum: { visits: 3 },
+              dimensions: { refererHost: "www.google.com" },
+            },
+          ],
+          countries: [],
+          devices: [],
+          webVitals: [
+            {
+              count: 100,
+              quantiles: {
+                largestContentfulPaintP75: 1350,
+                interactionToNextPaintP75: 120,
+                cumulativeLayoutShiftP75: 0.01,
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+};
+
+export const cloudflareActions = {
+  meta: [
+    { name: "event", type: "String" },
+    { name: "page_path", type: "String" },
+    { name: "count", type: "UInt64" },
+  ],
+  data: [
+    { event: "paper_pdf", page_path: "/cloud-drive/", count: 4 },
+    { event: "copy_citation", page_path: "/cloud-drive/", count: 2 },
+  ],
+  rows: 2,
+};
