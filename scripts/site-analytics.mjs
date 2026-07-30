@@ -31,21 +31,21 @@ export function transmitAction({
   if (!endpoint || !payload) return false;
   const body = JSON.stringify(payload);
 
-  if (typeof navigatorImpl?.sendBeacon === "function") {
-    const blob = new Blob([body], { type: "application/json" });
-    if (navigatorImpl.sendBeacon(endpoint, blob)) return true;
+  if (typeof fetchImpl === "function") {
+    void fetchImpl(endpoint, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body,
+      keepalive: true,
+      mode: "cors",
+      credentials: "omit",
+    }).catch(() => {});
+    return true;
   }
 
-  if (typeof fetchImpl !== "function") return false;
-  void fetchImpl(endpoint, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body,
-    keepalive: true,
-    mode: "cors",
-    credentials: "omit",
-  }).catch(() => {});
-  return true;
+  if (typeof navigatorImpl?.sendBeacon !== "function") return false;
+  const blob = new Blob([body], { type: "application/json" });
+  return navigatorImpl.sendBeacon(endpoint, blob);
 }
 
 export function initActionTracking({

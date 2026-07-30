@@ -18,7 +18,7 @@ test("action payload is limited to event and normalized page path", () => {
   assert.equal(createActionPayload("page_view", "/"), null);
 });
 
-test("fetch fallback uses keepalive and sends no visitor fields", async () => {
+test("keepalive fetch sends no credentials or visitor fields", async () => {
   const calls = [];
   const accepted = transmitAction({
     endpoint: "https://events.example.test/event",
@@ -39,7 +39,7 @@ test("fetch fallback uses keepalive and sends no visitor fields", async () => {
   assert.doesNotMatch(calls[0].options.body, /email|referrer|userAgent|ip/i);
 });
 
-test("successful sendBeacon avoids the fetch fallback", () => {
+test("credential-free keepalive fetch is preferred over sendBeacon", async () => {
   const beacons = [];
   const fetchCalls = [];
   const accepted = transmitAction({
@@ -52,14 +52,15 @@ test("successful sendBeacon avoids the fetch fallback", () => {
         return true;
       },
     },
-    fetchImpl: (...args) => fetchCalls.push(args),
+    fetchImpl: async (...args) => fetchCalls.push(args),
   });
 
   assert.equal(accepted, true);
-  assert.equal(beacons.length, 1);
-  assert.equal(beacons[0].url, "https://events.example.test/event");
-  assert.equal(beacons[0].body.type, "application/json");
-  assert.deepEqual(fetchCalls, []);
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(beacons.length, 0);
+  assert.equal(fetchCalls.length, 1);
+  assert.equal(fetchCalls[0][1].credentials, "omit");
+  assert.equal(fetchCalls[0][1].keepalive, true);
 });
 
 test("tracking attaches only annotated clicks on known pages", async () => {
