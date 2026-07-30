@@ -34,6 +34,15 @@ Lighthouse reports. Artifacts are retained for 90 days. GitHub sends failed
 workflow notifications according to each account's Actions notification
 settings.
 
+## Audience and search metrics
+
+The independent `traffic-report` job adds finalized Google Search performance,
+bot-filtered Cloudflare page views and approximate visits, browser referral
+categories, real-user p75 Web Vitals, and five high-value site actions. See the
+[audience and search analytics runbook](analytics.md) for metric definitions,
+date and sampling rules, dashboard paths, credentials, manual runs, and
+rotation procedures.
+
 ## Run locally
 
 ```bash
@@ -54,6 +63,6 @@ while keeping
 
 The GEO checks verify crawlability, attribution, primary-source links,
 semantic structure, and machine-readable entities. They do not measure
-whether an answer engine cited a page. Search impressions, clicks, real-user
-INP, AI citations, and referral traffic require a later credentialed data
-source such as Search Console or privacy-conscious analytics.
+whether an answer engine cited a page. The audience report measures
+AI-assistant browser referrals, not crawler requests or answer-engine
+citations.

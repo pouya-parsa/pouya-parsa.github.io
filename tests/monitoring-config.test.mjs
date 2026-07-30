@@ -37,8 +37,50 @@ test("daily workflow is manual, scheduled, read-only, and retains reports", () =
   assert.match(yaml, /cron: ["']17 12 \* \* \*["']/);
   assert.match(yaml, /workflow_dispatch:/);
   assert.match(yaml, /permissions:\s*\n\s+contents: read/);
-  assert.doesNotMatch(yaml, /issues: write|contents: write|secrets\./);
+  assert.match(yaml, /traffic-report:/);
+  assert.match(
+    yaml,
+    /traffic-report:[\s\S]*permissions:\s*\n\s+contents: read\s*\n\s+id-token: write/
+  );
+  assert.match(yaml, /google-github-actions\/auth@v3/);
+  assert.match(
+    yaml,
+    /access_token_scopes:\s*https:\/\/www\.googleapis\.com\/auth\/webmasters\.readonly/
+  );
+  assert.match(yaml, /secrets\.CLOUDFLARE_API_TOKEN/);
+  assert.equal(
+    (yaml.match(/secrets\./g) ?? []).length,
+    1,
+    "only the read-only Cloudflare secret is allowed"
+  );
+  assert.match(yaml, /npm run monitor:traffic/);
+  assert.match(yaml, /traffic-report-\$\{\{ github\.run_id \}\}/);
+  assert.doesNotMatch(yaml, /issues: write|contents: write/);
   assert.match(yaml, /retention-days: 90/);
   assert.match(yaml, /if: always\(\)/);
   assert.match(yaml, /GITHUB_STEP_SUMMARY/);
+});
+
+test("analytics runbook documents metrics, limits, and credential rotation", () => {
+  const runbook = fs.readFileSync(
+    new URL("../docs/analytics.md", import.meta.url),
+    "utf8"
+  );
+  const requiredNames = [
+    "GCP_WORKLOAD_IDENTITY_PROVIDER",
+    "GCP_SERVICE_ACCOUNT_EMAIL",
+    "SEARCH_CONSOLE_SITE_URL",
+    "CLOUDFLARE_ACCOUNT_ID",
+    "CLOUDFLARE_WEB_ANALYTICS_SITE_TAG",
+    "CLOUDFLARE_ANALYTICS_DATASET",
+    "CLOUDFLARE_API_TOKEN",
+  ];
+
+  for (const name of requiredNames) assert.match(runbook, new RegExp(name));
+  assert.match(runbook, /Account Analytics: Read/);
+  assert.match(runbook, /browser referrals, not crawler requests/i);
+  assert.match(runbook, /without cookies or persistent\s+identifiers/i);
+  assert.match(runbook, /not legal advice/i);
+  assert.match(runbook, /gh secret set CLOUDFLARE_API_TOKEN/);
+  assert.match(runbook, /wrangler logout/);
 });
