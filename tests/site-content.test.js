@@ -22,6 +22,70 @@ test("Search Console verification file is published at the site root", () => {
   assert.equal(fs.existsSync(nestedToken), false);
 });
 
+test("both pages expose privacy-conscious analytics and annotated actions", () => {
+  const home = read("index.html");
+  const article = read("cloud-drive/index.html");
+  const siteToken = "08854ddd9a7348d0885fd65e09c95132";
+  const endpoint =
+    "https://pouya-parsa-site-events.mail-pouyaparsa.workers.dev/event";
+
+  for (const html of [home, article]) {
+    assert.equal((html.match(/data-cf-beacon=/g) || []).length, 1);
+    assert.equal((html.match(new RegExp(siteToken, "g")) || []).length, 1);
+    assert.match(
+      html,
+      new RegExp(
+        `<meta name="site-analytics-endpoint" content="${endpoint}">`
+      )
+    );
+  }
+  assert.match(home, /<script type="module" src="scripts\/site-analytics\.mjs">/);
+  assert.match(
+    article,
+    /<script type="module" src="\.\.\/scripts\/site-analytics\.mjs">/
+  );
+
+  const anchorTags = (html, href) =>
+    [...html.matchAll(/<a\b[^>]*>/g)]
+      .map(([tag]) => tag)
+      .filter((tag) => tag.includes(`href="${href}"`));
+  const assertAnnotated = (html, href, eventName, expectedCount) => {
+    const anchors = anchorTags(html, href);
+    assert.equal(anchors.length, expectedCount);
+    for (const anchor of anchors) {
+      assert.match(
+        anchor,
+        new RegExp(`data-analytics-event="${eventName}"`)
+      );
+    }
+  };
+
+  assertAnnotated(home, "cloud-drive/", "interactive_article", 3);
+  assertAnnotated(home, "PouyaParsa_CV.pdf", "cv", 2);
+  assertAnnotated(
+    home,
+    "https://github.com/pouya-parsa",
+    "github_profile",
+    1
+  );
+  assertAnnotated(
+    home,
+    "https://arxiv.org/pdf/2607.09045",
+    "paper_pdf",
+    1
+  );
+  assertAnnotated(
+    article,
+    "https://arxiv.org/pdf/2607.09045",
+    "paper_pdf",
+    2
+  );
+  assert.match(
+    article,
+    /<button id="copy-citation"[^>]*data-analytics-event="copy_citation"/
+  );
+});
+
 test("homepage promotes the Cloud Drive paper and article", () => {
   const html = read("index.html");
   assert.match(
@@ -436,10 +500,13 @@ test("homepage leads with the VLA memory-bandwidth result", () => {
     /near-term cloud VLA inference is often limited by GPU memory bandwidth/i
   );
   assert.match(html, /even after 5G\/6G can carry the workload/i);
-  assert.match(html, /href="cloud-drive\/">Explore the interactive article/);
   assert.match(
     html,
-    /href="https:\/\/arxiv\.org\/pdf\/2607\.09045">Read the paper/
+    /href="cloud-drive\/"[^>]*>Explore the interactive article/
+  );
+  assert.match(
+    html,
+    /href="https:\/\/arxiv\.org\/pdf\/2607\.09045"[^>]*>Read the paper/
   );
 });
 

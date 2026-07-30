@@ -31,6 +31,7 @@
     <meta name="twitter:description" content="See why HBM-bound VLA decoding—not just 5G/6G bandwidth—sets the cloud-driving compute-latency limit.">
     <meta name="twitter:image" content="https://pouya-parsa.github.io/images/cloud-drive/og-cloud-drive.png">
     <meta name="twitter:image:alt" content="Can the Cloud Drive? Communication, compute, and cost gates connect an autonomous vehicle to cloud infrastructure.">
+    <meta name="site-analytics-endpoint" content="https://pouya-parsa-site-events.mail-pouyaparsa.workers.dev/event">
 
     <link rel="stylesheet" href="../css/cloud-drive.css">
 
@@ -130,7 +131,7 @@
             <p class="paper-affiliation">University of Minnesota Twin Cities</p>
             <p class="paper-venue">Preprint <span aria-hidden="true">·</span> July 2026 <span aria-hidden="true">·</span> arXiv:2607.09045</p>
             <div class="resource-links" aria-label="Paper resources">
-              <a class="button button-primary" href="https://arxiv.org/pdf/2607.09045">Paper ↗</a>
+              <a class="button button-primary" href="https://arxiv.org/pdf/2607.09045" data-analytics-event="paper_pdf">Paper ↗</a>
               <a class="button" href="#simulator">Interactive simulator</a>
               <a class="button" href="../">Portfolio</a>
             </div>
@@ -588,14 +589,14 @@
               <h2 id="citation-heading">Read and cite the paper.</h2>
               <p>The preprint contains the complete analytical framework, equations, parameter tables, literature review, and policy discussion.</p>
               <div class="citation-actions">
-                <a class="button button-primary" href="https://arxiv.org/pdf/2607.09045">Download the PDF ↗</a>
+                <a class="button button-primary" href="https://arxiv.org/pdf/2607.09045" data-analytics-event="paper_pdf">Download the PDF ↗</a>
                 <a class="button button-secondary" href="https://arxiv.org/abs/2607.09045">Open the abstract ↗</a>
               </div>
             </div>
             <div class="bibtex-card">
               <div class="bibtex-heading">
                 <p>BibTeX</p>
-                <button id="copy-citation" type="button">Copy citation</button>
+                <button id="copy-citation" data-analytics-event="copy_citation" type="button">Copy citation</button>
               </div>
               <pre id="bibtex"><code>@article{parsa2026cloud,
   title={Can the Cloud Drive? Infrastructure Feasibility of Offloading Autonomous Driving Across 5G and 6G},
@@ -616,5 +617,9 @@
     </footer>
     <script src="../scripts/cloud-drive-model.js"></script>
     <script src="../scripts/cloud-drive.js"></script>
+    <script type="module" src="../scripts/site-analytics.mjs"></script>
+    <!-- Cloudflare Web Analytics -->
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"08854ddd9a7348d0885fd65e09c95132"}'></script>
+    <!-- End Cloudflare Web Analytics -->
   </body>
 </html>

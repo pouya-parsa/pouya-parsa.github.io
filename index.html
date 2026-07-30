@@ -19,6 +19,7 @@
     <meta name="twitter:description" content="Machine learning researcher focused on LLM memory, long-context AI systems, and vision-language models.">
     <meta name="twitter:image" content="https://pouya-parsa.github.io/profile_image.webp">
     <meta name="twitter:image:alt" content="Portrait of Pouya Parsa">
+    <meta name="site-analytics-endpoint" content="https://pouya-parsa-site-events.mail-pouyaparsa.workers.dev/event">
 
     <script type="application/ld+json">
       {
@@ -56,7 +57,7 @@
         <a href="#awards">Awards</a>
         <a href="#education">Education</a>
         <a href="#experience">Experience</a>
-        <a href="PouyaParsa_CV.pdf">CV</a>
+        <a href="PouyaParsa_CV.pdf" data-analytics-event="cv">CV</a>
       </nav>
     </header>
 
@@ -68,8 +69,8 @@
         <ul class="profile-links">
           <li>Minneapolis, US</li>
           <li><a href="mailto:parsa025@umn.edu">parsa025@umn.edu</a></li>
-          <li><a href="https://github.com/pouya-parsa">github.com/pouya-parsa</a></li>
-          <li><a href="PouyaParsa_CV.pdf">CV</a></li>
+          <li><a href="https://github.com/pouya-parsa" data-analytics-event="github_profile">github.com/pouya-parsa</a></li>
+          <li><a href="PouyaParsa_CV.pdf" data-analytics-event="cv">CV</a></li>
         </ul>
       </aside>
 
@@ -83,7 +84,7 @@
         <section id="news">
           <h2>News</h2>
           <ul>
-            <li><strong>2026:</strong> New preprint: <a href="cloud-drive/">Can the Cloud Drive?</a> explains why VLA cloud inference can hit a GPU memory-bandwidth limit even after the 5G/6G uplink passes.</li>
+            <li><strong>2026:</strong> New preprint: <a href="cloud-drive/" data-analytics-event="interactive_article">Can the Cloud Drive?</a> explains why VLA cloud inference can hit a GPU memory-bandwidth limit even after the 5G/6G uplink passes.</li>
             <li><strong>2026:</strong> Awarded a Departmental Fellowship Award.</li>
             <li><strong>2026:</strong> Received the CTS TRB Reimbursement Award to present research at TRB 2026.</li>
             <li><strong>2025:</strong> Paper on self-reflective vision-language models accepted for presentation at TRB 2026.</li>
@@ -93,10 +94,10 @@
         <section id="publications">
           <h2>Publications</h2>
           <article>
-            <h3><a href="cloud-drive/">Can the Cloud Drive? Infrastructure Feasibility of Offloading Autonomous Driving Across 5G and 6G</a></h3>
+            <h3><a href="cloud-drive/" data-analytics-event="interactive_article">Can the Cloud Drive? Infrastructure Feasibility of Offloading Autonomous Driving Across 5G and 6G</a></h3>
             <p><strong>Pouya Parsa</strong>, Kawon Han, and Seongjin Choi. arXiv:2607.09045, 2026.</p>
             <p>The study shows why near-term cloud VLA inference is often limited by GPU memory bandwidth—even after 5G/6G can carry the workload—and when shared cloud GPUs can reduce cost.</p>
-            <p><a href="cloud-drive/">Explore the interactive article</a> &middot; <a href="https://arxiv.org/pdf/2607.09045">Read the paper</a></p>
+            <p><a href="cloud-drive/" data-analytics-event="interactive_article">Explore the interactive article</a> &middot; <a href="https://arxiv.org/pdf/2607.09045" data-analytics-event="paper_pdf">Read the paper</a></p>
           </article>
           <article>
             <h3>Video-based Vehicle Surveillance in the Wild: License Plate, Make, and Model Recognition with Self-Reflective Vision-Language Models</h3>
@@ -186,5 +187,9 @@
         </section>
       </main>
     </div>
+    <script type="module" src="scripts/site-analytics.mjs"></script>
+    <!-- Cloudflare Web Analytics -->
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"08854ddd9a7348d0885fd65e09c95132"}'></script>
+    <!-- End Cloudflare Web Analytics -->
   </body>
 </html>
