@@ -31,7 +31,7 @@ test("homepage exposes canonical social and Person discovery metadata", () => {
   );
   assert.match(
     html,
-    /property="og:image" content="https:\/\/pouya-parsa\.github\.io\/profile_image\.png"/
+    /property="og:image" content="https:\/\/pouya-parsa\.github\.io\/profile_image\.webp"/
   );
   assert.match(html, /name="twitter:card" content="summary"/);
 
@@ -50,6 +50,21 @@ test("homepage exposes canonical social and Person discovery metadata", () => {
   assert.equal(person.sameAs, "https://github.com/pouya-parsa");
 });
 
+test("homepage uses a right-sized profile image", () => {
+  const html = read("index.html");
+  const imagePath = path.join(root, "profile_image.webp");
+
+  assert.match(
+    html,
+    /src="profile_image\.webp" alt="Pouya Parsa" width="400" height="400"/
+  );
+  assert.equal(fs.existsSync(imagePath), true, "profile WebP is missing");
+  assert.ok(
+    fs.statSync(imagePath).size < 50_000,
+    "profile WebP exceeds its 50 KB performance budget"
+  );
+});
+
 test("all ten official paper figures are present and non-empty", () => {
   for (let index = 1; index <= 10; index += 1) {
     const name = `images/cloud-drive/figure-${String(index).padStart(2, "0")}.svg`;
@@ -57,6 +72,34 @@ test("all ten official paper figures are present and non-empty", () => {
     assert.equal(fs.existsSync(absolute), true, `${name} is missing`);
     assert.ok(fs.statSync(absolute).size > 1_000, `${name} is unexpectedly small`);
     assert.match(fs.readFileSync(absolute, "utf8"), /<svg[\s>]/);
+  }
+});
+
+test("article uses lightweight previews above the fold", () => {
+  const html = read("cloud-drive/index.html");
+  const previews = [
+    {
+      file: "images/cloud-drive/figure-01-preview.webp",
+      markup:
+        /src="\.\.\/images\/cloud-drive\/figure-01-preview\.webp"[^>]*width="1200"[^>]*height="675"/,
+      budget: 100_000,
+    },
+    {
+      file: "images/cloud-drive/figure-08-preview.webp",
+      markup:
+        /src="\.\.\/images\/cloud-drive\/figure-08-preview\.webp"[^>]*width="1200"[^>]*height="484"/,
+      budget: 30_000,
+    },
+  ];
+
+  for (const preview of previews) {
+    assert.match(html, preview.markup);
+    const absolute = path.join(root, preview.file);
+    assert.equal(fs.existsSync(absolute), true, `${preview.file} is missing`);
+    assert.ok(
+      fs.statSync(absolute).size < preview.budget,
+      `${preview.file} exceeds its performance budget`
+    );
   }
 });
 
