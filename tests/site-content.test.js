@@ -7,6 +7,21 @@ const root = path.resolve(__dirname, "..");
 const read = (relativePath) =>
   fs.readFileSync(path.join(root, relativePath), "utf8");
 
+test("Search Console verification file is published at the site root", () => {
+  const rootToken = path.join(root, "googlec2d107d84ed0147d.html");
+  const nestedToken = path.join(
+    root,
+    "google-console/googlec2d107d84ed0147d.html"
+  );
+
+  assert.equal(fs.existsSync(rootToken), true);
+  assert.equal(
+    fs.readFileSync(rootToken, "utf8").trim(),
+    "google-site-verification: googlec2d107d84ed0147d.html"
+  );
+  assert.equal(fs.existsSync(nestedToken), false);
+});
+
 test("homepage promotes the Cloud Drive paper and article", () => {
   const html = read("index.html");
   assert.match(
