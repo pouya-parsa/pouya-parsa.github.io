@@ -6,3 +6,22 @@ node_modules/
 .monitoring/
 .lighthouseci/
 .wrangler/
+
+# Local VDA manuscript archive and unpacked source/build artifacts
+/kdd_prompt_tuning_.zip
+/main.tex
+/refs.bib
+/experiment_plan.md
+/cvpr.sty
+/ieee_fullname.bst
+/ACM-Reference-Format.bst
+/acmart.cls
+/related_work.tex
+/introduction.tex
+/method.tex
+/experiments.tex
+/closing_sections.tex
+/main.pdf
+/main-citations-verified.pdf
+/method-pages.txt
+/figs/

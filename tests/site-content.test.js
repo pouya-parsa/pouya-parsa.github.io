@@ -7,6 +7,8 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const read = (relativePath) =>
   fs.readFileSync(path.join(root, relativePath), "utf8");
+const escapeRegExp = (value) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 test("Search Console verification file is published at the site root", () => {
   const rootToken = path.join(root, "googlec2d107d84ed0147d.html");
@@ -583,4 +585,48 @@ test("Roofline explainer extends the academic responsive system", () => {
     /@media\s*\(max-width:\s*760px\)[\s\S]*\.roofline-numbers\s*\{[\s\S]*grid-template-columns:\s*1fr/
   );
   assert.match(css, /@media\s*print[\s\S]*\.roofline-section/);
+});
+
+test("VDA manuscript artifacts are explicitly ignored without hiding site docs", () => {
+  const ignore = read(".gitignore");
+  const required = [
+    "/kdd_prompt_tuning_.zip",
+    "/main.tex",
+    "/refs.bib",
+    "/experiment_plan.md",
+    "/cvpr.sty",
+    "/ieee_fullname.bst",
+    "/ACM-Reference-Format.bst",
+    "/acmart.cls",
+    "/related_work.tex",
+    "/introduction.tex",
+    "/method.tex",
+    "/experiments.tex",
+    "/closing_sections.tex",
+    "/main.pdf",
+    "/main-citations-verified.pdf",
+    "/method-pages.txt",
+    "/figs/",
+  ];
+
+  for (const pattern of required) {
+    assert.match(ignore, new RegExp(`^${escapeRegExp(pattern)}$`, "m"));
+  }
+  assert.doesNotMatch(ignore, /^\/?docs\/?$/m);
+});
+
+test("VDA publishes one optimized method overview image", () => {
+  const image = path.join(
+    root,
+    "images/visual-distribution-anchoring/method-overview.webp"
+  );
+  assert.equal(fs.existsSync(image), true, "VDA method overview is missing");
+  assert.ok(
+    fs.statSync(image).size > 20_000,
+    "VDA overview is unexpectedly small"
+  );
+  assert.ok(
+    fs.statSync(image).size < 350_000,
+    "VDA overview exceeds 350 KB"
+  );
 });
