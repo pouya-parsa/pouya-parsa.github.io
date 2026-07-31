@@ -4,6 +4,7 @@ export function page({
   schema,
   body = "<main><h1>Page heading</h1><h2>Section heading</h2></main>",
   extraHead = "",
+  socialImage = "https://pouya-parsa.github.io/profile_image.png",
 }) {
   const description = `${title} has a sufficiently descriptive summary.`;
   return `<!doctype html>
@@ -19,11 +20,11 @@ export function page({
   <meta property="og:url" content="${canonical}">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
-  <meta property="og:image" content="https://pouya-parsa.github.io/profile_image.png">
+  <meta property="og:image" content="${socialImage}">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="${title}">
   <meta name="twitter:description" content="${description}">
-  <meta name="twitter:image" content="https://pouya-parsa.github.io/profile_image.png">
+  <meta name="twitter:image" content="${socialImage}">
   ${extraHead}
   <script type="application/ld+json">${JSON.stringify(schema)}</script>
 </head>
@@ -83,6 +84,51 @@ export const validArticleHtml = page({
     ).join("")}</main>`,
 });
 
+export const validVdaArticleHtml = page({
+  canonical:
+    "https://pouya-parsa.github.io/visual-distribution-anchoring/",
+  title:
+    "Visual Distribution Anchoring for Efficient Prompt Tuning | Pouya Parsa",
+  socialImage:
+    "https://pouya-parsa.github.io/images/visual-distribution-anchoring/method-overview.webp",
+  schema: {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ScholarlyArticle",
+        headline:
+          "Visual Distribution Anchoring for Efficient Prompt Tuning",
+        datePublished: "2026-07-30",
+        url:
+          "https://pouya-parsa.github.io/visual-distribution-anchoring/",
+        image:
+          "https://pouya-parsa.github.io/images/visual-distribution-anchoring/method-overview.webp",
+        author: [
+          { "@id": "https://pouya-parsa.github.io/#pouya-parsa" },
+          { "@type": "Person", name: "Raoof Zare Moayedi" },
+          { "@type": "Person", name: "Seongjin Choi" },
+        ],
+      },
+      personNode,
+      { "@type": "BreadcrumbList", itemListElement: [] },
+    ],
+  },
+  extraHead: `
+    <meta name="citation_title" content="Visual Distribution Anchoring for Efficient Prompt Tuning">
+    <meta name="citation_author" content="Parsa, Pouya">
+    <meta name="citation_author" content="Moayedi, Raoof Zare">
+    <meta name="citation_author" content="Choi, Seongjin">
+    <meta name="citation_publication_date" content="2026/07/30">`,
+  body: `<main>
+    <h1>Visual Distribution Anchoring for Efficient Prompt Tuning</h1>
+    <h2>Paper overview</h2>
+    <figure id="figure-1">
+      <img src="/images/visual-distribution-anchoring/method-overview.webp" alt="VDA method overview">
+      <figcaption>Figure 1: Visual Distribution Anchoring method overview.</figcaption>
+    </figure>
+  </main>`,
+});
+
 export const validRobots = `User-agent: *
 Allow: /
 
@@ -93,4 +139,5 @@ export const validSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://pouya-parsa.github.io/</loc></url>
   <url><loc>https://pouya-parsa.github.io/cloud-drive/</loc></url>
+  <url><loc>https://pouya-parsa.github.io/visual-distribution-anchoring/</loc></url>
 </urlset>`;

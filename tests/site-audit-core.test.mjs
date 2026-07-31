@@ -12,6 +12,7 @@ import {
   validHomepageHtml,
   validRobots,
   validSitemap,
+  validVdaArticleHtml,
 } from "./fixtures/monitoring-site.mjs";
 
 const policy = buildSitePolicy({
@@ -21,6 +22,9 @@ const policy = buildSitePolicy({
 const homePolicy = policy.pages.find((page) => page.path === "/");
 const articlePolicy = policy.pages.find(
   (page) => page.path === "/cloud-drive/"
+);
+const vdaPolicy = policy.pages.find(
+  (page) => page.path === "/visual-distribution-anchoring/"
 );
 const failedIds = (result) =>
   result.checks
@@ -99,6 +103,35 @@ test("inconsistent paper identifier fails attribution", () => {
   assert.ok(failedIds(result).includes("geo.paper-identity"));
 });
 
+test("valid VDA preprint passes without invented public source metadata", () => {
+  assert.ok(vdaPolicy, "VDA page policy is missing");
+  const result = auditHtmlPage({
+    html: validVdaArticleHtml,
+    fetchUrl: vdaPolicy.fetchUrl,
+    policy: vdaPolicy,
+  });
+
+  assert.deepEqual(failedIds(result), []);
+  assert.deepEqual(result.internalUrls, [
+    "https://pouya-parsa.github.io/images/visual-distribution-anchoring/method-overview.webp",
+  ]);
+});
+
+test("VDA preprint fails when public source metadata is invented", () => {
+  assert.ok(vdaPolicy, "VDA page policy is missing");
+  const invented = validVdaArticleHtml.replace(
+    "</head>",
+    '<meta name="citation_arxiv_id" content="0000.00000"></head>'
+  );
+  const result = auditHtmlPage({
+    html: invented,
+    fetchUrl: vdaPolicy.fetchUrl,
+    policy: vdaPolicy,
+  });
+
+  assert.ok(failedIds(result).includes("geo.paper-identity"));
+});
+
 test("blocked answer-engine crawler fails", () => {
   const checks = auditRobots({
     text: `User-agent: OAI-SearchBot
@@ -127,6 +160,10 @@ test("missing and duplicate sitemap entries fail", () => {
     )
     .replace(
       "<url><loc>https://pouya-parsa.github.io/cloud-drive/</loc></url>",
+      ""
+    )
+    .replace(
+      "<url><loc>https://pouya-parsa.github.io/visual-distribution-anchoring/</loc></url>",
       ""
     );
 

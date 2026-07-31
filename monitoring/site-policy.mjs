@@ -67,6 +67,36 @@ export function buildSitePolicy({
           figureCount: 10,
         },
       },
+      {
+        ...shared,
+        path: "/visual-distribution-anchoring/",
+        fetchUrl: absolute(
+          "/visual-distribution-anchoring/",
+          fetchBase
+        ),
+        canonicalUrl: absolute(
+          "/visual-distribution-anchoring/",
+          canonicalBase
+        ),
+        requiredSchemaTypes: [
+          "ScholarlyArticle",
+          "Person",
+          "BreadcrumbList",
+        ],
+        personId: `${canonicalBase}#pouya-parsa`,
+        paper: {
+          title:
+            "Visual Distribution Anchoring for Efficient Prompt Tuning",
+          authors: [
+            "Parsa, Pouya",
+            "Moayedi, Raoof Zare",
+            "Choi, Seongjin",
+          ],
+          datePublished: "2026-07-30",
+          citationDate: "2026/07/30",
+          figureCount: 1,
+        },
+      },
     ],
   };
 }

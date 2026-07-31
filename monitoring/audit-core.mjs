@@ -235,40 +235,54 @@ export function auditHtmlPage({ html, fetchUrl, policy }) {
     const citationPdf = content($, 'meta[name="citation_pdf_url"]');
     const figureCount = $("figure").length;
     const captionCount = $("figure figcaption").length;
-    const paperLinked = $(`a[href="${policy.paper.pdfUrl}"]`).length > 0;
     const visibleHeading = normalizeText($("h1").text());
     const articleAuthorIds = Array.isArray(article?.author)
       ? article.author.map((author) => author?.["@id"])
       : [];
+    const baseIdentityMatches =
+      article?.headline === policy.paper.title &&
+      article?.datePublished === policy.paper.datePublished &&
+      article?.url === policy.canonicalUrl &&
+      articleAuthorIds.includes(policy.personId) &&
+      visibleHeading === policy.paper.title &&
+      citationTitle === policy.paper.title &&
+      JSON.stringify(citationAuthors) ===
+        JSON.stringify(policy.paper.authors) &&
+      citationDate === policy.paper.citationDate;
+    const arxivMatches = policy.paper.arxivId
+      ? article?.identifier === `arXiv:${policy.paper.arxivId}` &&
+        citationArxiv === policy.paper.arxivId
+      : article?.identifier === undefined && citationArxiv === "";
+    const sourceMatches = policy.paper.sourceUrl
+      ? article?.sameAs === policy.paper.sourceUrl
+      : article?.sameAs === undefined;
+    const pdfMatches = policy.paper.pdfUrl
+      ? citationPdf === policy.paper.pdfUrl
+      : citationPdf === "" && article?.encoding === undefined;
 
     checks.push(
       makeCheck(
         "geo.paper-identity",
-        article?.headline === policy.paper.title &&
-          article?.identifier === `arXiv:${policy.paper.arxivId}` &&
-          article?.datePublished === policy.paper.datePublished &&
-          article?.url === policy.canonicalUrl &&
-          article?.sameAs === policy.paper.sourceUrl &&
-          articleAuthorIds.includes(policy.personId) &&
-          visibleHeading === policy.paper.title &&
-          citationTitle === policy.paper.title &&
-          JSON.stringify(citationAuthors) ===
-            JSON.stringify(policy.paper.authors) &&
-          citationDate === policy.paper.citationDate &&
-          citationArxiv === policy.paper.arxivId &&
-          citationPdf === policy.paper.pdfUrl,
+        baseIdentityMatches &&
+          arxivMatches &&
+          sourceMatches &&
+          pdfMatches,
         "Visible and machine-readable paper identity agrees",
         { url: fetchUrl }
       )
     );
-    checks.push(
-      makeCheck(
-        "geo.paper-source",
-        paperLinked,
-        "Article links to the primary paper PDF",
-        { url: fetchUrl }
-      )
-    );
+    if (policy.paper.pdfUrl) {
+      const paperLinked =
+        $(`a[href="${policy.paper.pdfUrl}"]`).length > 0;
+      checks.push(
+        makeCheck(
+          "geo.paper-source",
+          paperLinked,
+          "Article links to the primary paper PDF",
+          { url: fetchUrl }
+        )
+      );
+    }
     checks.push(
       makeCheck(
         "geo.figures",

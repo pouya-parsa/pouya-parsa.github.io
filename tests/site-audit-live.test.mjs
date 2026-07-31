@@ -8,6 +8,7 @@ import {
   validHomepageHtml,
   validRobots,
   validSitemap,
+  validVdaArticleHtml,
 } from "./fixtures/monitoring-site.mjs";
 
 const response = (url, body, status = 200) => ({
@@ -34,6 +35,13 @@ const makeFetch = (routes) => async (url) => {
 };
 
 const policy = buildSitePolicy();
+const homePolicy = policy.pages.find((page) => page.path === "/");
+const cloudDrivePolicy = policy.pages.find(
+  (page) => page.path === "/cloud-drive/"
+);
+const vdaPolicy = policy.pages.find(
+  (page) => page.path === "/visual-distribution-anchoring/"
+);
 const figureRoutes = new Map(
   Array.from({ length: 10 }, (_, index) => [
     `https://pouya-parsa.github.io/images/cloud-drive/figure-${String(index + 1).padStart(2, "0")}.svg`,
@@ -41,11 +49,16 @@ const figureRoutes = new Map(
   ])
 );
 const routes = new Map([
-  [policy.pages[0].fetchUrl, { body: validHomepageHtml }],
-  [policy.pages[1].fetchUrl, { body: validArticleHtml }],
+  [homePolicy.fetchUrl, { body: validHomepageHtml }],
+  [cloudDrivePolicy.fetchUrl, { body: validArticleHtml }],
+  [vdaPolicy.fetchUrl, { body: validVdaArticleHtml }],
   [policy.robotsUrl, { body: validRobots }],
   [policy.sitemapUrl, { body: validSitemap }],
   ["https://pouya-parsa.github.io/profile_image.png", { body: "png" }],
+  [
+    "https://pouya-parsa.github.io/images/visual-distribution-anchoring/method-overview.webp",
+    { body: "webp" },
+  ],
   ...figureRoutes,
 ]);
 
@@ -62,7 +75,7 @@ test("live audit passes a complete site and reports every fetch", async () => {
   assert.ok(report.pages.every((page) => page.status === 200));
   assert.equal(
     report.checks.filter((check) => check.id === "resource.http").length,
-    11
+    12
   );
   assert.ok(
     report.externalUrls.includes("https://arxiv.org/pdf/2607.09045")
@@ -132,7 +145,7 @@ test("fetchWithRetry retries a transient server response", async () => {
 
 test("off-origin required redirect fails", async () => {
   const redirectedRoutes = new Map(routes);
-  redirectedRoutes.set(policy.pages[0].fetchUrl, {
+  redirectedRoutes.set(homePolicy.fetchUrl, {
     body: validHomepageHtml,
     finalUrl: "https://example.test/",
   });
@@ -154,7 +167,7 @@ test("off-origin required redirect fails", async () => {
 
 test("Markdown puts failures before passing checks", async () => {
   const brokenRoutes = new Map(routes);
-  brokenRoutes.set(policy.pages[0].fetchUrl, {
+  brokenRoutes.set(homePolicy.fetchUrl, {
     body: validHomepageHtml.replace(/<link rel="canonical"[^>]+>/, ""),
   });
 
