@@ -25,14 +25,15 @@ test("Search Console verification file is published at the site root", () => {
   assert.equal(fs.existsSync(nestedToken), false);
 });
 
-test("both pages expose privacy-conscious analytics and annotated actions", () => {
+test("all public pages expose privacy-conscious analytics and annotated actions", () => {
   const home = read("index.html");
   const article = read("cloud-drive/index.html");
+  const vda = read("visual-distribution-anchoring/index.html");
   const siteToken = "08854ddd9a7348d0885fd65e09c95132";
   const endpoint =
     "https://pouya-parsa-site-events.mail-pouyaparsa.workers.dev/event";
 
-  for (const html of [home, article]) {
+  for (const html of [home, article, vda]) {
     assert.equal((html.match(/data-cf-beacon=/g) || []).length, 1);
     assert.equal((html.match(new RegExp(siteToken, "g")) || []).length, 1);
     assert.match(
@@ -45,6 +46,10 @@ test("both pages expose privacy-conscious analytics and annotated actions", () =
   assert.match(home, /<script type="module" src="scripts\/site-analytics\.mjs">/);
   assert.match(
     article,
+    /<script type="module" src="\.\.\/scripts\/site-analytics\.mjs">/
+  );
+  assert.match(
+    vda,
     /<script type="module" src="\.\.\/scripts\/site-analytics\.mjs">/
   );
 
@@ -629,4 +634,106 @@ test("VDA publishes one optimized method overview image", () => {
     fs.statSync(image).size < 350_000,
     "VDA overview exceeds 350 KB"
   );
+});
+
+test("VDA page exposes the approved preprint content and scholarly metadata", () => {
+  const html = read("visual-distribution-anchoring/index.html");
+  const title = "Visual Distribution Anchoring for Efficient Prompt Tuning";
+
+  assert.match(html, new RegExp(`<h1[^>]*>${title}</h1>`));
+  assert.match(
+    html,
+    /Preprint <span aria-hidden="true">·<\/span> July 2026/
+  );
+  for (const author of [
+    "Pouya Parsa",
+    "Raoof Zare Moayedi",
+    "Seongjin Choi",
+  ]) {
+    assert.ok(html.includes(author), `missing author: ${author}`);
+  }
+  for (const id of [
+    "overview",
+    "method",
+    "results",
+    "evidence",
+    "abstract",
+    "limitations",
+  ]) {
+    assert.match(html, new RegExp(`id="${id}"`));
+  }
+  assert.match(
+    html,
+    /src="\.\.\/images\/visual-distribution-anchoring\/method-overview\.webp"[^>]*width="1600"/
+  );
+  assert.match(html, /65\.82%[\s\S]*69\.21%/);
+  assert.match(html, /\+3\.39/);
+  assert.match(html, /9\/10/);
+  assert.match(html, /K\s*=\s*32/);
+  assert.match(html, /no target labels/i);
+  assert.match(html, /no target-side optimization/i);
+  assert.match(html, /no uniform class-prior assumption/i);
+  assert.match(html, /no iterative refinement/i);
+  assert.match(html, /no access to (?:test|evaluation) queries/i);
+
+  assert.match(
+    html,
+    /rel="canonical" href="https:\/\/pouya-parsa\.github\.io\/visual-distribution-anchoring\/"/
+  );
+  assert.match(
+    html,
+    /name="robots" content="index, follow, max-image-preview:large"/
+  );
+  assert.match(
+    html,
+    new RegExp(`name="citation_title" content="${title}"`)
+  );
+  assert.equal((html.match(/name="citation_author"/g) ?? []).length, 3);
+  assert.match(
+    html,
+    /name="citation_publication_date" content="2026\/07\/30"/
+  );
+  assert.doesNotMatch(html, /citation_pdf_url|citation_arxiv_id/i);
+  assert.doesNotMatch(
+    html,
+    /arxiv\.org|doi\.org|KDD '27|KDD 2027|Read the paper/i
+  );
+
+  const jsonLd = html.match(
+    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/
+  );
+  assert.ok(jsonLd, "VDA JSON-LD block is missing");
+  const graph = JSON.parse(jsonLd[1])["@graph"];
+  const scholarlyArticle = graph.find(
+    (node) => node["@type"] === "ScholarlyArticle"
+  );
+  assert.equal(scholarlyArticle.headline, title);
+  assert.equal(scholarlyArticle.datePublished, "2026-07-30");
+  assert.equal(
+    scholarlyArticle.url,
+    "https://pouya-parsa.github.io/visual-distribution-anchoring/"
+  );
+  for (const forbidden of ["identifier", "sameAs", "encoding"]) {
+    assert.equal(
+      forbidden in scholarlyArticle,
+      false,
+      `unexpected ${forbidden}`
+    );
+  }
+});
+
+test("VDA stylesheet defines its distinct responsive academic system", () => {
+  const css = read("css/visual-distribution-anchoring.css");
+  assert.match(css, /--vda-indigo:\s*#1f4f9a/);
+  assert.match(css, /--vda-lavender:\s*#7652b8/);
+  assert.match(css, /--vda-orange:\s*#d85f00/);
+  assert.match(css, /\.paper-nav\s*\{[\s\S]*position:\s*sticky/);
+  assert.match(css, /\.method-grid\s*\{[\s\S]*display:\s*grid/);
+  assert.match(
+    css,
+    /\.results-table-wrap\s*\{[\s\S]*overflow-x:\s*auto/
+  );
+  assert.match(css, /@media\s*\(max-width:\s*760px\)/);
+  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
+  assert.match(css, /@media\s*print/);
 });

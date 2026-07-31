@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Visual Distribution Anchoring for Efficient Prompt Tuning | Pouya Parsa</title>
+    <meta name="description" content="Visual Distribution Anchoring uses hard-partitioned unlabeled target images to build cacheable visual prototypes that improve zero-shot and prompt-tuned vision-language classifiers without target-side optimization.">
+    <meta name="author" content="Pouya Parsa">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://pouya-parsa.github.io/visual-distribution-anchoring/">
+
+    <meta name="citation_title" content="Visual Distribution Anchoring for Efficient Prompt Tuning">
+    <meta name="citation_author" content="Parsa, Pouya">
+    <meta name="citation_author" content="Moayedi, Raoof Zare">
+    <meta name="citation_author" content="Choi, Seongjin">
+    <meta name="citation_publication_date" content="2026/07/30">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://pouya-parsa.github.io/visual-distribution-anchoring/">
+    <meta property="og:title" content="Visual Distribution Anchoring for Efficient Prompt Tuning">
+    <meta property="og:description" content="A training-free target adaptation method that turns an unlabeled target pool into class-specific visual anchors for frozen vision-language classifiers.">
+    <meta property="og:image" content="https://pouya-parsa.github.io/images/visual-distribution-anchoring/method-overview.webp">
+    <meta property="og:image:alt" content="VDA pipeline from frozen semantic priors and an unlabeled target pool to a cached classifier.">
+    <meta property="og:image:width" content="1600">
+    <meta property="og:image:height" content="906">
+    <meta property="article:published_time" content="2026-07-30">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Visual Distribution Anchoring for Efficient Prompt Tuning">
+    <meta name="twitter:description" content="VDA builds class-specific visual anchors from an unlabeled target pool with no target-side optimization.">
+    <meta name="twitter:image" content="https://pouya-parsa.github.io/images/visual-distribution-anchoring/method-overview.webp">
+    <meta name="twitter:image:alt" content="VDA pipeline from frozen priors to offline target adaptation and cached inference.">
+    <meta name="site-analytics-endpoint" content="https://pouya-parsa-site-events.mail-pouyaparsa.workers.dev/event">
+
+    <link rel="stylesheet" href="../css/visual-distribution-anchoring.css">
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "ScholarlyArticle",
+            "@id": "https://pouya-parsa.github.io/visual-distribution-anchoring/#paper",
+            "headline": "Visual Distribution Anchoring for Efficient Prompt Tuning",
+            "name": "Visual Distribution Anchoring for Efficient Prompt Tuning",
+            "description": "Visual Distribution Anchoring is a training-free target adaptation framework that estimates class-level visual prototypes from a disjoint unlabeled target pool and fuses them with a frozen semantic classifier.",
+            "datePublished": "2026-07-30",
+            "url": "https://pouya-parsa.github.io/visual-distribution-anchoring/",
+            "image": "https://pouya-parsa.github.io/images/visual-distribution-anchoring/method-overview.webp",
+            "author": [
+              {
+                "@id": "https://pouya-parsa.github.io/#pouya-parsa"
+              },
+              {
+                "@type": "Person",
+                "name": "Raoof Zare Moayedi"
+              },
+              {
+                "@type": "Person",
+                "name": "Seongjin Choi"
+              }
+            ],
+            "keywords": [
+              "vision-language models",
+              "prompt tuning",
+              "target adaptation",
+              "visual prototypes",
+              "CLIP",
+              "training-free adaptation"
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://pouya-parsa.github.io/#pouya-parsa",
+            "name": "Pouya Parsa",
+            "url": "https://pouya-parsa.github.io/",
+            "affiliation": {
+              "@type": "CollegeOrUniversity",
+              "name": "University of Minnesota Twin Cities"
+            },
+            "sameAs": "https://github.com/pouya-parsa"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Pouya Parsa",
+                "item": "https://pouya-parsa.github.io/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Visual Distribution Anchoring",
+                "item": "https://pouya-parsa.github.io/visual-distribution-anchoring/"
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to the article</a>
+
+    <main id="main-content">
+      <article>
+        <header class="paper-hero" id="top">
+          <div class="paper-wrap hero-inner">
+            <span class="project-badge">Research preprint</span>
+            <h1>Visual Distribution Anchoring for Efficient Prompt Tuning</h1>
+            <p class="paper-subtitle">Target-domain appearance, distilled into a fixed visual correction for frozen vision–language classifiers.</p>
+            <p class="paper-authors"><strong>Pouya Parsa</strong>, Raoof Zare Moayedi, and Seongjin Choi</p>
+            <p class="paper-affiliation">University of Minnesota</p>
+            <p class="paper-venue">Preprint <span aria-hidden="true">·</span> July 2026</p>
+            <div class="resource-links" aria-label="Project sections">
+              <a class="button button-primary" href="#method">Method</a>
+              <a class="button" href="#results">Results</a>
+              <a class="button" href="../">Portfolio</a>
+            </div>
+          </div>
+        </header>
+
+        <section class="overview-section" id="overview" aria-labelledby="overview-heading">
+          <div class="paper-wrap">
+            <div class="section-heading overview-heading">
+              <div>
+                <p class="section-kicker">The complete pipeline</p>
+                <h2 id="overview-heading">Adapt once. Cache the classifier. Evaluate normally.</h2>
+              </div>
+              <p>VDA separates offline target adaptation from evaluation. A disjoint unlabeled pool supplies target appearance; test queries never participate in adaptation.</p>
+            </div>
+            <figure class="overview-figure">
+              <img
+                src="../images/visual-distribution-anchoring/method-overview.webp"
+                alt="Three-stage VDA pipeline: frozen source and domain priors hard-partition a disjoint unlabeled target pool, confidence-ranked supports form normalized class prototypes, and their fusion produces a cached classifier for disjoint test images."
+                width="1600"
+                height="906"
+                fetchpriority="high">
+              <figcaption>VDA estimates class-specific visual anchors once, before evaluation, and then uses an ordinary fixed classifier at inference.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <nav class="paper-nav" aria-label="Paper sections">
+          <div class="paper-nav-inner">
+            <a href="#overview">Overview</a>
+            <a href="#method">Method</a>
+            <a href="#results">Results</a>
+            <a href="#evidence">Evidence</a>
+            <a href="#abstract">Abstract</a>
+            <a href="#limitations">Limitations</a>
+          </div>
+        </nav>
+
+        <section class="article-section core-section" id="core-idea" aria-labelledby="core-heading">
+          <div class="paper-wrap core-layout">
+            <div class="core-copy">
+              <p class="section-kicker">The core idea</p>
+              <h2 id="core-heading">A class name says what an object is. It does not say how that object looks here.</h2>
+              <p class="lead">Prompt-tuned classifiers preserve semantic identity, but a target domain can express the same class through a different visual distribution. A forest in a natural photograph does not look like a forest in an overhead satellite image.</p>
+              <p>VDA estimates that missing target appearance from an unlabeled target-training pool. It forms class-correlated visual prototypes and treats them as conservative corrections to the frozen semantic classifier—not as replacements for it.</p>
+            </div>
+            <aside class="core-answer" aria-label="VDA in one sentence">
+              <span>VDA in one sentence</span>
+              <p>Hard-partition target images, average the most useful class-specific features, and fuse the resulting visual anchors with the semantic classifier.</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="article-section method-section" id="method" aria-labelledby="method-heading">
+          <div class="paper-wrap">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Method</p>
+                <h2 id="method-heading">Three operations turn an unlabeled pool into a fixed classifier.</h2>
+              </div>
+              <p>The design is intentionally one-pass: no target-side training loop, no repeated refinement, and no query-time adaptation.</p>
+            </div>
+
+            <div class="method-grid">
+              <article class="method-card partition">
+                <p class="method-number">01</p>
+                <p class="method-label">Partition</p>
+                <h3>Give every target image one predicted class.</h3>
+                <p>Average logits from the frozen semantic classifier and a fixed domain-template classifier, then use hard argmax assignment. Unequal class masses are allowed.</p>
+              </article>
+              <article class="method-card anchor">
+                <p class="method-number">02</p>
+                <p class="method-label">Anchor</p>
+                <h3>Keep the strongest supports in each class bin.</h3>
+                <p>Rank assignments by confidence and retain at most K = 32 images per class. Their normalized mean becomes a target visual prototype.</p>
+              </article>
+              <article class="method-card fuse">
+                <p class="method-number">03</p>
+                <p class="method-label">Fuse</p>
+                <h3>Correct semantics with target appearance.</h3>
+                <p>Combine every supported prototype with its semantic classifier using one global weight. Unsupported classes keep the original semantic vector.</p>
+              </article>
+            </div>
+
+            <div class="method-exclusions" aria-label="VDA adaptation constraints">
+              <p>No target labels</p>
+              <p>No target-side optimization</p>
+              <p>No uniform class-prior assumption</p>
+              <p>No iterative refinement</p>
+              <p>No access to test queries</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="article-section results-section" id="results" aria-labelledby="results-heading">
+          <div class="paper-wrap">
+            <div class="results-intro">
+              <div>
+                <p class="section-kicker">Headline result</p>
+                <h2 id="results-heading">The primary classifier gains 3.39 points across ten target datasets.</h2>
+                <p>In the matched comparison, VDA improves TCP from <strong>65.82%</strong> to <strong>69.21%</strong> mean top-1 accuracy and improves nine of ten targets.</p>
+              </div>
+              <dl class="result-callout">
+                <div>
+                  <dt>+3.39</dt>
+                  <dd>mean points</dd>
+                </div>
+                <div>
+                  <dt>9/10</dt>
+                  <dd>targets improved</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="results-table-wrap" tabindex="0" aria-label="VDA results table">
+              <table>
+                <caption>Mean cross-dataset top-1 accuracy reported in the manuscript.</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Semantic classifier</th>
+                    <th scope="col">Base</th>
+                    <th scope="col">+ VDA</th>
+                    <th scope="col">Gain</th>
+                    <th scope="col">Improved</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Zero-shot CLIP</th>
+                    <td>65.34</td>
+                    <td>68.56</td>
+                    <td>+3.22</td>
+                    <td>9/10</td>
+                  </tr>
+                  <tr class="primary-result">
+                    <th scope="row">TCP</th>
+                    <td>65.82</td>
+                    <td>69.21</td>
+                    <td>+3.39</td>
+                    <td>9/10</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">MaPLe, 3 seeds</th>
+                    <td>66.25 ± 0.42</td>
+                    <td>69.60 ± 0.22</td>
+                    <td>+3.35 ± 0.37</td>
+                    <td>9/10</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">PromptKD, 3 seeds</th>
+                    <td>70.80 ± 0.40</td>
+                    <td>73.59 ± 0.28</td>
+                    <td>+2.79 ± 0.38</td>
+                    <td>9/10</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="table-note">MaPLe and PromptKD are attachment studies: their semantic outputs are combined with a fixed raw-CLIP visual correction. They demonstrate compatibility, not matched training or inference cost.</p>
+          </div>
+        </section>
+
+        <section class="article-section evidence-section" id="evidence" aria-labelledby="evidence-heading">
+          <div class="paper-wrap">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">What the controls show</p>
+                <h2 id="evidence-heading">Useful visual evidence does not require perfect pseudo-labels.</h2>
+              </div>
+              <p>The ablations isolate the value of class-correlated target appearance from generic target statistics.</p>
+            </div>
+
+            <div class="evidence-grid">
+              <article>
+                <span>Semantic + visual</span>
+                <h3>Fusion matters.</h3>
+                <p>Direct visual-prototype classification reaches 65.92%, only 0.10 points above the primary semantic classifier. Conservative fusion reaches 69.21%.</p>
+              </article>
+              <article>
+                <span>Hard correspondence</span>
+                <h3>Class structure matters.</h3>
+                <p>A common centroid, random assignment, and shuffled prototypes do not reproduce VDA’s gain. Hard class partitioning supplies most of the improvement.</p>
+              </article>
+              <article>
+                <span>Visually local errors</span>
+                <h3>Wrong can still be nearby.</h3>
+                <p>Some class-incorrect supports remain visually close to the true class. The semantic classifier preserves identity while the prototype contributes target appearance.</p>
+              </article>
+              <article>
+                <span>One offline pass</span>
+                <h3>Adaptation stays cacheable.</h3>
+                <p>When semantic and visual logits share a feature space, fusion reduces to one fixed class vector with ordinary linear inference.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="article-section abstract-section" id="abstract" aria-labelledby="abstract-heading">
+          <div class="reading-wrap">
+            <p class="section-kicker">Abstract</p>
+            <h2 id="abstract-heading">Visual Distribution Anchoring for Efficient Prompt Tuning</h2>
+            <p>Prompt tuning adapts vision–language models with few trainable parameters, but existing designs face a trade-off: static textual prompts can overfit source classes, image-conditioned prompts incur per-instance computation, and multimodal tuning modifies the visual branch. We propose VDA (Visual Distribution Anchoring), a training-free target adaptation framework that augments a frozen semantic classifier with class-level visual prototypes estimated offline from an unlabeled target pool.</p>
+            <p>We first investigate whether such prototypes can be synthesized from class names alone. Although a text-to-centroid mapper accurately reconstructs held-out source prototypes, it does not transfer under dataset shift: class names specify semantic identity but not how classes are visually instantiated in a target domain. An oracle analysis nevertheless confirms that true target prototypes are highly discriminative.</p>
+            <p>Motivated by this gap, VDA uses frozen semantic and domain-template classifiers to hard-partition unlabeled target images into class-correlated groups. Confidence-ranked image features form normalized visual prototypes, which are fused with the semantic classifier using one global weight. Adaptation requires no target labels, target-side optimization, uniform class-prior assumption, iterative refinement, or access to test queries, and produces a fixed, cacheable classifier.</p>
+            <p>Controlled experiments show that class-specific hard partitioning, rather than generic target-domain statistics, drives the improvement, and that visually local pseudo-label errors can remain useful despite being class-incorrect. Across ten ImageNet-to-target transfers, the same frozen design improves zero-shot CLIP, TCP, and MaPLe by 3.22, 3.39, and 3.35 points, respectively, improving nine of ten targets in every setting. Its visual correction further improves leakage-free PromptKD by 2.79 points, demonstrating complementarity across zero-shot, source-prompted, multimodal-prompted, and target-distilled classifiers.</p>
+          </div>
+        </section>
+
+        <section class="article-section limitations-section" id="limitations" aria-labelledby="limitations-heading">
+          <div class="paper-wrap limitations-layout">
+            <div>
+              <p class="section-kicker">Boundaries</p>
+              <h2 id="limitations-heading">Where the evidence stops.</h2>
+              <p>VDA is deliberately simple, but it is not assumption-free. These conditions define the current result and the most useful next questions.</p>
+            </div>
+            <ul class="limitations-list">
+              <li><strong>Target-pool dependence.</strong> The unlabeled target-training pool must represent the evaluation domain; small, biased, or incomplete pools can weaken the prototypes.</li>
+              <li><strong>Domain description.</strong> Assignment uses a manually specified coarse domain template, which adds prior knowledge.</li>
+              <li><strong>Visual space.</strong> Reported prototypes use OpenAI CLIP ViT-B/16, so the experiments do not establish transfer to arbitrary backbones.</li>
+              <li><strong>Difficult classes.</strong> A class with few or no predicted supports cannot receive a reliable visual anchor.</li>
+              <li><strong>Global fusion.</strong> One fixed weight avoids cross-class inconsistency but cannot exploit unusually accurate prototypes independently.</li>
+            </ul>
+          </div>
+        </section>
+
+        <footer class="paper-footer">
+          <div class="paper-wrap footer-inner">
+            <p>Visual Distribution Anchoring <span aria-hidden="true">·</span> Preprint, July 2026</p>
+            <p><a href="../">Back to the portfolio</a> <span aria-hidden="true">·</span> <a href="#top">Back to top</a></p>
+          </div>
+        </footer>
+      </article>
+    </main>
+
+    <script type="module" src="../scripts/site-analytics.mjs"></script>
+    <!-- Cloudflare Web Analytics -->
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"08854ddd9a7348d0885fd65e09c95132"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+  </body>
+</html>
