@@ -8,8 +8,11 @@ export const ACTION_EVENTS = new Set([
 
 export function normalizePagePath(pathname) {
   if (pathname === "/") return "/";
-  if (pathname === "/cloud-drive/" || pathname === "/cloud-drive/index.html") {
-    return "/cloud-drive/";
+  for (const route of [
+    "/cloud-drive/",
+    "/visual-distribution-anchoring/",
+  ]) {
+    if (pathname === route || pathname === `${route}index.html`) return route;
   }
   return null;
 }

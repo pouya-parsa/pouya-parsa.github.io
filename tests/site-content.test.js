@@ -69,6 +69,12 @@ test("all public pages expose privacy-conscious analytics and annotated actions"
   };
 
   assertAnnotated(home, "cloud-drive/", "interactive_article", 3);
+  assertAnnotated(
+    home,
+    "visual-distribution-anchoring/",
+    "interactive_article",
+    3
+  );
   assertAnnotated(home, "PouyaParsa_CV.pdf", "cv", 2);
   assertAnnotated(
     home,
@@ -736,4 +742,34 @@ test("VDA stylesheet defines its distinct responsive academic system", () => {
   assert.match(css, /@media\s*\(max-width:\s*760px\)/);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   assert.match(css, /@media\s*print/);
+});
+
+test("homepage promotes the VDA preprint without a paper download", () => {
+  const html = read("index.html");
+  const route = "visual-distribution-anchoring/";
+  assert.match(
+    html,
+    /Visual Distribution Anchoring for Efficient Prompt Tuning/
+  );
+  assert.match(html, /Preprint, July 2026/);
+  assert.match(html, /65\.82% to 69\.21%/);
+  assert.equal(
+    (html.match(new RegExp(`href="${route}"`, "g")) ?? []).length,
+    3
+  );
+  const publication = html.match(
+    /<article>\s*<h3><a href="visual-distribution-anchoring\/"[\s\S]*?<\/article>/
+  );
+  assert.ok(publication, "VDA publication entry is missing");
+  assert.doesNotMatch(
+    publication[0],
+    /Read the paper|arxiv\.org|doi\.org/
+  );
+});
+
+test("sitemap lists the VDA canonical exactly once", () => {
+  const sitemap = read("sitemap.xml");
+  const canonical =
+    "https://pouya-parsa.github.io/visual-distribution-anchoring/";
+  assert.equal(sitemap.split(canonical).length - 1, 1);
 });

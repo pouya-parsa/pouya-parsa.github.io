@@ -9,12 +9,26 @@ import {
 
 test("action payload is limited to event and normalized page path", () => {
   assert.equal(normalizePagePath("/cloud-drive/index.html"), "/cloud-drive/");
+  assert.equal(
+    normalizePagePath("/visual-distribution-anchoring/index.html"),
+    "/visual-distribution-anchoring/"
+  );
   assert.equal(normalizePagePath("/"), "/");
   assert.equal(normalizePagePath("/unknown/"), null);
   assert.deepEqual(createActionPayload("paper_pdf", "/cloud-drive/"), {
     event: "paper_pdf",
     pagePath: "/cloud-drive/",
   });
+  assert.deepEqual(
+    createActionPayload(
+      "interactive_article",
+      "/visual-distribution-anchoring/"
+    ),
+    {
+      event: "interactive_article",
+      pagePath: "/visual-distribution-anchoring/",
+    }
+  );
   assert.equal(createActionPayload("page_view", "/"), null);
 });
 
