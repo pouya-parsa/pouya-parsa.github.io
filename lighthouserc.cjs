@@ -17,6 +17,7 @@ module.exports = {
       url: [
         new URL("/", baseUrl).href,
         new URL("/cloud-drive/", baseUrl).href,
+        new URL("/visual-distribution-anchoring/", baseUrl).href,
       ],
       numberOfRuns: 3,
       settings: {

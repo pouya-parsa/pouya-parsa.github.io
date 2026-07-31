@@ -1,11 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 
-test("Lighthouse config monitors both pages with approved thresholds", () => {
+test("Lighthouse config monitors all three pages with approved thresholds", () => {
   const config = require("../lighthouserc.cjs");
   const { collect, assert: assertion } = config.ci;
 
@@ -13,6 +16,7 @@ test("Lighthouse config monitors both pages with approved thresholds", () => {
   assert.deepEqual(collect.url, [
     "https://pouya-parsa.github.io/",
     "https://pouya-parsa.github.io/cloud-drive/",
+    "https://pouya-parsa.github.io/visual-distribution-anchoring/",
   ]);
   assert.deepEqual(assertion.assertions["categories:seo"], [
     "error",
@@ -22,6 +26,72 @@ test("Lighthouse config monitors both pages with approved thresholds", () => {
     assertion.assertions["largest-contentful-paint"],
     ["error", { maxNumericValue: 3000, aggregationMethod: "median" }]
   );
+});
+
+test("Lighthouse summary rejects a report set missing the VDA page", () => {
+  const directory = fs.mkdtempSync(
+    path.join(os.tmpdir(), "site-monitor-summary-")
+  );
+  const output = path.join(directory, "summary.md");
+  const urls = [
+    "https://pouya-parsa.github.io/",
+    "https://pouya-parsa.github.io/cloud-drive/",
+  ];
+  const report = (url) => ({
+    finalDisplayedUrl: url,
+    categories: {
+      performance: { score: 0.9 },
+      accessibility: { score: 0.95 },
+      "best-practices": { score: 0.95 },
+      seo: { score: 1 },
+    },
+    audits: {
+      "largest-contentful-paint": { numericValue: 1800 },
+      "cumulative-layout-shift": { numericValue: 0.01 },
+      "total-blocking-time": { numericValue: 50 },
+    },
+  });
+
+  try {
+    for (const [pageIndex, url] of urls.entries()) {
+      for (let run = 1; run <= 3; run += 1) {
+        fs.writeFileSync(
+          path.join(
+            directory,
+            `page-${pageIndex}-run-${run}.report.json`
+          ),
+          JSON.stringify(report(url))
+        );
+      }
+    }
+
+    const result = spawnSync(
+      process.execPath,
+      [
+        new URL("../scripts/lighthouse-summary.mjs", import.meta.url)
+          .pathname,
+        "--input",
+        directory,
+        "--output",
+        output,
+      ],
+      {
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          LHCI_BASE_URL: "https://pouya-parsa.github.io/",
+        },
+      }
+    );
+
+    assert.equal(result.status, 1);
+    assert.match(
+      result.stdout,
+      /Expected 3 Lighthouse reports for https:\/\/pouya-parsa\.github\.io\/visual-distribution-anchoring\/; found 0/
+    );
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 test("daily workflow is manual, scheduled, read-only, and retains reports", () => {

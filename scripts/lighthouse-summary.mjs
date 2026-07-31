@@ -26,6 +26,7 @@ try {
   const expectedUrls = [
     new URL("/", base).href,
     new URL("/cloud-drive/", base).href,
+    new URL("/visual-distribution-anchoring/", base).href,
   ];
 
   for (const url of expectedUrls) {

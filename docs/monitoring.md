@@ -1,8 +1,9 @@
 # Daily site monitoring
 
-The **Daily SEO and GEO monitor** workflow checks the deployed homepage and
-Cloud Drive article every day at 12:17 UTC. It can also be started from
-GitHub's **Actions → Daily SEO and GEO monitor → Run workflow** menu.
+The **Daily SEO and GEO monitor** workflow checks the deployed homepage,
+Cloud Drive article, and Visual Distribution Anchoring preprint page every day
+at 12:17 UTC. It can also be started from GitHub's
+**Actions → Daily SEO and GEO monitor → Run workflow** menu.
 
 ## What is measured
 
