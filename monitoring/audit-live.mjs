@@ -187,9 +187,17 @@ async function runLiveAudit({
 
   const resourceUrls = [...internalUrls].sort();
   const resourceResults = await Promise.allSettled(
-    resourceUrls.map((url) =>
-      fetchWithRetry(url, { fetchFn, retries, timeoutMs })
-    )
+    resourceUrls.map(async (url) => {
+      const response = await fetchWithRetry(url, {
+        fetchFn,
+        retries,
+        timeoutMs,
+      });
+      if (response.body && !response.bodyUsed) {
+        await response.body.cancel();
+      }
+      return response;
+    })
   );
 
   for (let index = 0; index < resourceUrls.length; index += 1) {

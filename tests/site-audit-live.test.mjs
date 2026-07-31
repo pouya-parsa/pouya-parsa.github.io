@@ -110,6 +110,32 @@ test("broken internal resource fails without fetching third parties", async () =
   );
 });
 
+test("live audit disposes internal resource response bodies", async () => {
+  const resourceUrl =
+    "https://pouya-parsa.github.io/profile_image.png";
+  let resourceResponse;
+  const fixtureFetch = makeFetch(routes);
+  const fetchFn = async (url) => {
+    if (String(url) !== resourceUrl) return fixtureFetch(url);
+
+    resourceResponse = new Response("png", { status: 200 });
+    Object.defineProperty(resourceResponse, "url", {
+      value: resourceUrl,
+    });
+    return resourceResponse;
+  };
+
+  const report = await auditLiveSite({
+    policy,
+    fetchFn,
+    retries: 0,
+    timeoutMs: 100,
+  });
+
+  assert.equal(report.summary.status, "pass");
+  assert.equal(resourceResponse.bodyUsed, true);
+});
+
 test("fetchWithRetry retries a transient exception", async () => {
   let attempts = 0;
 
