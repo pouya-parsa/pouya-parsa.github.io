@@ -699,10 +699,11 @@ test("VDA page exposes the approved preprint content and scholarly metadata", ()
     html,
     /name="citation_publication_date" content="2026\/07\/30"/
   );
-  assert.doesNotMatch(html, /citation_pdf_url|citation_arxiv_id/i);
-  assert.doesNotMatch(
+  assert.match(html, /name="citation_arxiv_id" content="2607\.28967"/);
+  assert.doesNotMatch(html, /name="citation_pdf_url"/);
+  assert.match(
     html,
-    /arxiv\.org|doi\.org|KDD '27|KDD 2027|Read the paper/i
+    /href="https:\/\/arxiv\.org\/abs\/2607\.28967"[^>]*>Paper ↗<\/a>/
   );
 
   const jsonLd = html.match(
@@ -715,17 +716,16 @@ test("VDA page exposes the approved preprint content and scholarly metadata", ()
   );
   assert.equal(scholarlyArticle.headline, title);
   assert.equal(scholarlyArticle.datePublished, "2026-07-30");
+  assert.equal(scholarlyArticle.identifier, "arXiv:2607.28967");
   assert.equal(
     scholarlyArticle.url,
     "https://pouya-parsa.github.io/visual-distribution-anchoring/"
   );
-  for (const forbidden of ["identifier", "sameAs", "encoding"]) {
-    assert.equal(
-      forbidden in scholarlyArticle,
-      false,
-      `unexpected ${forbidden}`
-    );
-  }
+  assert.equal(
+    scholarlyArticle.sameAs,
+    "https://arxiv.org/abs/2607.28967"
+  );
+  assert.equal("encoding" in scholarlyArticle, false);
 });
 
 test("VDA stylesheet defines its distinct responsive academic system", () => {
@@ -744,7 +744,7 @@ test("VDA stylesheet defines its distinct responsive academic system", () => {
   assert.match(css, /@media\s*print/);
 });
 
-test("homepage promotes the VDA preprint without a paper download", () => {
+test("homepage promotes the VDA preprint with its arXiv link", () => {
   const html = read("index.html");
   const route = "visual-distribution-anchoring/";
   assert.match(
@@ -752,6 +752,7 @@ test("homepage promotes the VDA preprint without a paper download", () => {
     /Visual Distribution Anchoring for Efficient Prompt Tuning/
   );
   assert.match(html, /Preprint, July 2026/);
+  assert.match(html, /arXiv:2607\.28967/);
   assert.match(html, /65\.82% to 69\.21%/);
   assert.equal(
     (html.match(new RegExp(`href="${route}"`, "g")) ?? []).length,
@@ -761,9 +762,9 @@ test("homepage promotes the VDA preprint without a paper download", () => {
     /<article>\s*<h3><a href="visual-distribution-anchoring\/"[\s\S]*?<\/article>/
   );
   assert.ok(publication, "VDA publication entry is missing");
-  assert.doesNotMatch(
+  assert.match(
     publication[0],
-    /Read the paper|arxiv\.org|doi\.org/
+    /href="https:\/\/arxiv\.org\/abs\/2607\.28967"[^>]*>Read the paper<\/a>/
   );
 });
 

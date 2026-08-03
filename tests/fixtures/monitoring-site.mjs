@@ -98,9 +98,11 @@ export const validVdaArticleHtml = page({
         "@type": "ScholarlyArticle",
         headline:
           "Visual Distribution Anchoring for Efficient Prompt Tuning",
+        identifier: "arXiv:2607.28967",
         datePublished: "2026-07-30",
         url:
           "https://pouya-parsa.github.io/visual-distribution-anchoring/",
+        sameAs: "https://arxiv.org/abs/2607.28967",
         image:
           "https://pouya-parsa.github.io/images/visual-distribution-anchoring/method-overview.webp",
         author: [
@@ -118,10 +120,12 @@ export const validVdaArticleHtml = page({
     <meta name="citation_author" content="Parsa, Pouya">
     <meta name="citation_author" content="Moayedi, Raoof Zare">
     <meta name="citation_author" content="Choi, Seongjin">
-    <meta name="citation_publication_date" content="2026/07/30">`,
+    <meta name="citation_publication_date" content="2026/07/30">
+    <meta name="citation_arxiv_id" content="2607.28967">`,
   body: `<main>
     <h1>Visual Distribution Anchoring for Efficient Prompt Tuning</h1>
     <h2>Paper overview</h2>
+    <a href="https://arxiv.org/abs/2607.28967">Paper</a>
     <figure id="figure-1">
       <img src="/images/visual-distribution-anchoring/method-overview.webp" alt="VDA method overview">
       <figcaption>Figure 1: Visual Distribution Anchoring method overview.</figcaption>

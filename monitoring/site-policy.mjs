@@ -85,6 +85,7 @@ export function buildSitePolicy({
         ],
         personId: `${canonicalBase}#pouya-parsa`,
         paper: {
+          arxivId: "2607.28967",
           title:
             "Visual Distribution Anchoring for Efficient Prompt Tuning",
           authors: [
@@ -94,6 +95,7 @@ export function buildSitePolicy({
           ],
           datePublished: "2026-07-30",
           citationDate: "2026/07/30",
+          sourceUrl: "https://arxiv.org/abs/2607.28967",
           figureCount: 1,
         },
       },

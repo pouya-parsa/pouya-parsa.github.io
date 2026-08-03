@@ -271,14 +271,15 @@ export function auditHtmlPage({ html, fetchUrl, policy }) {
         { url: fetchUrl }
       )
     );
-    if (policy.paper.pdfUrl) {
+    const paperUrl = policy.paper.pdfUrl ?? policy.paper.sourceUrl;
+    if (paperUrl) {
       const paperLinked =
-        $(`a[href="${policy.paper.pdfUrl}"]`).length > 0;
+        $(`a[href="${paperUrl}"]`).length > 0;
       checks.push(
         makeCheck(
           "geo.paper-source",
           paperLinked,
-          "Article links to the primary paper PDF",
+          "Article links to the primary paper source",
           { url: fetchUrl }
         )
       );
