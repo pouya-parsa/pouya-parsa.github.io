@@ -728,6 +728,59 @@ test("VDA page exposes the approved preprint content and scholarly metadata", ()
   assert.equal("encoding" in scholarlyArticle, false);
 });
 
+test("VDA page exposes human-readable and BibTeX citation details", () => {
+  const html = read("visual-distribution-anchoring/index.html");
+  const css = read("css/visual-distribution-anchoring.css");
+
+  assert.match(html, /href="#citation"[^>]*>Citation<\/a>/);
+  assert.match(
+    html,
+    /<section class="article-section citation-section" id="citation" aria-labelledby="citation-heading">/
+  );
+  assert.match(
+    html,
+    /Pouya Parsa, Raoof Zare Moayedi, and Seongjin Choi\./
+  );
+  assert.match(html, /arXiv:2607\.28967 \[cs\.CV\], 2026/);
+  assert.match(
+    html,
+    /href="https:\/\/doi\.org\/10\.48550\/arXiv\.2607\.28967"[^>]*>doi:10\.48550\/arXiv\.2607\.28967<\/a>/
+  );
+  assert.match(
+    html,
+    /href="https:\/\/arxiv\.org\/pdf\/2607\.28967"[^>]*>Download PDF ↗<\/a>/
+  );
+  assert.match(
+    html,
+    /href="https:\/\/arxiv\.org\/abs\/2607\.28967"[^>]*>Open on arXiv ↗<\/a>/
+  );
+  assert.match(html, /<pre id="bibtex"><code>@article\{parsa2026visual,/);
+  assert.match(
+    html,
+    /author=\{Parsa, Pouya and Moayedi, Raoof Zare and Choi, Seongjin\}/
+  );
+  assert.match(
+    html,
+    /journal=\{arXiv preprint arXiv:2607\.28967\}/
+  );
+  assert.match(html, /doi=\{10\.48550\/arXiv\.2607\.28967\}/);
+
+  assert.match(css, /\.citation-layout\s*\{[\s\S]*display:\s*grid/);
+  assert.match(css, /\.bibtex-card\s*\{[\s\S]*background:\s*#111d33/);
+  assert.match(
+    css,
+    /\.bibtex-card pre\s*\{[\s\S]*overflow-x:\s*auto/
+  );
+  assert.match(
+    css,
+    /@media\s*\(max-width:\s*900px\)[\s\S]*\.citation-layout[\s\S]*grid-template-columns:\s*1fr/
+  );
+  assert.match(
+    css,
+    /@media\s*print[\s\S]*\.citation-actions[\s\S]*display:\s*none/
+  );
+});
+
 test("VDA stylesheet defines its distinct responsive academic system", () => {
   const css = read("css/visual-distribution-anchoring.css");
   assert.match(css, /--vda-indigo:\s*#1f4f9a/);
