@@ -103,7 +103,7 @@ test("inconsistent paper identifier fails attribution", () => {
   assert.ok(failedIds(result).includes("geo.paper-identity"));
 });
 
-test("valid VDA preprint passes without invented public source metadata", () => {
+test("valid VDA preprint passes with its public arXiv source", () => {
   assert.ok(vdaPolicy, "VDA page policy is missing");
   const result = auditHtmlPage({
     html: validVdaArticleHtml,
@@ -115,21 +115,24 @@ test("valid VDA preprint passes without invented public source metadata", () => 
   assert.deepEqual(result.internalUrls, [
     "https://pouya-parsa.github.io/images/visual-distribution-anchoring/method-overview.webp",
   ]);
+  assert.deepEqual(result.externalUrls, [
+    "https://arxiv.org/abs/2607.28967",
+  ]);
 });
 
-test("VDA preprint fails when public source metadata is invented", () => {
+test("VDA preprint fails when its public arXiv source is not linked", () => {
   assert.ok(vdaPolicy, "VDA page policy is missing");
-  const invented = validVdaArticleHtml.replace(
-    "</head>",
-    '<meta name="citation_arxiv_id" content="0000.00000"></head>'
+  const unlinked = validVdaArticleHtml.replace(
+    '<a href="https://arxiv.org/abs/2607.28967">Paper</a>',
+    ""
   );
   const result = auditHtmlPage({
-    html: invented,
+    html: unlinked,
     fetchUrl: vdaPolicy.fetchUrl,
     policy: vdaPolicy,
   });
 
-  assert.ok(failedIds(result).includes("geo.paper-identity"));
+  assert.ok(failedIds(result).includes("geo.paper-source"));
 });
 
 test("blocked answer-engine crawler fails", () => {
