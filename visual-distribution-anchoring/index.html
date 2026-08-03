@@ -360,6 +360,7 @@
             <div class="bibtex-card">
               <div class="bibtex-heading">
                 <p>BibTeX</p>
+                <button id="copy-citation" type="button">Copy citation</button>
               </div>
               <pre id="bibtex"><code>@article{parsa2026visual,
   title={Visual Distribution Anchoring for Efficient Prompt Tuning},
@@ -369,6 +370,7 @@
   doi={10.48550/arXiv.2607.28967},
   url={https://arxiv.org/abs/2607.28967}
 }</code></pre>
+              <p id="citation-status" aria-live="polite"></p>
             </div>
           </div>
         </section>
@@ -382,6 +384,7 @@
       </article>
     </main>
 
+    <script type="module" src="../scripts/visual-distribution-anchoring.mjs"></script>
     <script type="module" src="../scripts/site-analytics.mjs"></script>
     <!-- Cloudflare Web Analytics -->
     <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"08854ddd9a7348d0885fd65e09c95132"}'></script>

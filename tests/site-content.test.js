@@ -779,6 +779,19 @@ test("VDA page exposes human-readable and BibTeX citation details", () => {
     css,
     /@media\s*print[\s\S]*\.citation-actions[\s\S]*display:\s*none/
   );
+  assert.match(
+    html,
+    /<button id="copy-citation" type="button">Copy citation<\/button>/
+  );
+  assert.match(
+    html,
+    /<p id="citation-status" aria-live="polite"><\/p>/
+  );
+  assert.match(
+    html,
+    /<script type="module" src="\.\.\/scripts\/visual-distribution-anchoring\.mjs"><\/script>/
+  );
+  assert.match(css, /#copy-citation\s*\{[\s\S]*cursor:\s*pointer/);
 });
 
 test("VDA stylesheet defines its distinct responsive academic system", () => {

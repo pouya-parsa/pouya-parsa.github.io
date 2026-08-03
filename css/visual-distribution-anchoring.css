@@ -783,6 +783,32 @@ tbody tr:last-child td {
   text-transform: uppercase;
 }
 
+#copy-citation {
+  min-height: 38px;
+  padding: 0.48rem 0.78rem;
+  color: #fff;
+  background: transparent;
+  border: 1px solid #526989;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+#copy-citation:hover,
+#copy-citation:focus-visible {
+  background: #203451;
+  border-color: #8197b5;
+}
+
+#citation-status {
+  min-height: 1.4em;
+  margin: 12px 0 0;
+  color: #bfcde1;
+  font-size: 0.78rem;
+}
+
 .bibtex-card pre {
   margin: 18px 0 0;
   overflow-x: auto;
@@ -972,6 +998,11 @@ tbody tr:last-child td {
   .bibtex-heading p,
   .bibtex-card pre {
     color: #000;
+  }
+
+  #copy-citation,
+  #citation-status {
+    display: none;
   }
 
   a {
