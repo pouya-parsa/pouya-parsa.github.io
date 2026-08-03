@@ -105,3 +105,10 @@ test("CV section rules leave clear space below their headings", () => {
   );
   assert.doesNotMatch(source, /\[\\vspace\{-[^}]+\}\\color\{sectionblue\}\\titlerule\]/);
 });
+
+test("CV uses Konkur for the university recognition program", () => {
+  const source = fs.readFileSync(sourcePath, "utf8");
+
+  assert.match(source, /Amirkabir University of Technology Honors and Konkur/);
+  assert.doesNotMatch(source, /Olympiads Program/);
+});
