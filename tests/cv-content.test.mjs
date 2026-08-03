@@ -86,3 +86,12 @@ test("published CV mirrors the approved source content and links", () => {
   }
   assert.doesNotMatch(urls, /tel:/i);
 });
+
+test("CV date fields use upright body type", () => {
+  const source = fs.readFileSync(sourcePath, "utf8");
+
+  assert.doesNotMatch(source, /\\hfill\\textit\{#4\}/);
+  assert.doesNotMatch(source, /#2\\hfill\\textit\{#3\}/);
+  assert.match(source, /\\textit\{#3\}\\hfill#4/);
+  assert.match(source, /#2\\hfill#3/);
+});
