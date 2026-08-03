@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { spawnSync } = require("node:child_process");
+const cheerio = require("cheerio");
 const fs = require("node:fs");
 const path = require("node:path");
 
@@ -109,6 +110,29 @@ test("homepage promotes the Cloud Drive paper and article", () => {
   assert.equal((html.match(/href="cloud-drive\/"/g) || []).length, 3);
   assert.match(html, /href="https:\/\/arxiv\.org\/pdf\/2607\.09045"/);
   assert.match(html, /arXiv:2607\.09045/);
+});
+
+test("homepage publication titles link to the official arXiv records", () => {
+  const $ = cheerio.load(read("index.html"));
+  const expectedLinks = new Map([
+    [
+      "Video-based Vehicle Surveillance in the Wild: License Plate, Make, and Model Recognition with Self-Reflective Vision-Language Models",
+      "https://arxiv.org/abs/2508.01387",
+    ],
+    [
+      "Where2Start: Leveraging Initial States for Robust and Sample-Efficient Reinforcement Learning",
+      "https://arxiv.org/abs/2311.15089",
+    ],
+  ]);
+
+  for (const [title, href] of expectedLinks) {
+    const titleLink = $("#publications h3 > a").filter(
+      (_, element) => $(element).text().trim() === title
+    );
+
+    assert.equal(titleLink.length, 1, `${title} should have one title link`);
+    assert.equal(titleLink.attr("href"), href);
+  }
 });
 
 test("homepage exposes canonical social and Person discovery metadata", () => {
