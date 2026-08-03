@@ -95,3 +95,13 @@ test("CV date fields use upright body type", () => {
   assert.match(source, /\\textit\{#3\}\\hfill#4/);
   assert.match(source, /#2\\hfill#3/);
 });
+
+test("CV section rules leave clear space below their headings", () => {
+  const source = fs.readFileSync(sourcePath, "utf8");
+
+  assert.match(
+    source,
+    /\[\\vspace\{0\.15em\}\\color\{sectionblue\}\\titlerule\]/
+  );
+  assert.doesNotMatch(source, /\[\\vspace\{-[^}]+\}\\color\{sectionblue\}\\titlerule\]/);
+});
