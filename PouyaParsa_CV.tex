@@ -1,0 +1,232 @@
+% Build with: latexmk -pdf -interaction=nonstopmode -halt-on-error PouyaParsa_CV.tex
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.62in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{needspace}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[colorlinks=true,urlcolor=MidnightBlue,linkcolor=MidnightBlue]{hyperref}
+
+\definecolor{sectionblue}{HTML}{245B86}
+\definecolor{muted}{HTML}{555555}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlist[itemize]{leftmargin=1.2em,itemsep=1.2pt,topsep=2pt,parsep=0pt}
+\urlstyle{same}
+
+\titleformat{\section}
+  {\large\bfseries\color{sectionblue}}
+  {}{0pt}{}
+  [\vspace{-0.35em}\color{sectionblue}\titlerule]
+\titlespacing*{\section}{0pt}{0.8em}{0.45em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\footnotesize\color{muted}Pouya Parsa \enspace\textbar\enspace Page \thepage\ of \pageref*{LastPage}}
+
+\newcommand{\cvheading}[4]{%
+  \needspace{4\baselineskip}%
+  \textbf{#1}\hfill\textbf{#2}\par
+  \textit{#3}\hfill\textit{#4}\par
+  \vspace{0.15em}%
+}
+
+\newcommand{\publication}[5]{%
+  \needspace{6\baselineskip}%
+  \href{#4}{\textbf{#1}}\par
+  #2\hfill\textit{#3}\par
+  \begin{itemize}
+    \item #5
+  \end{itemize}
+  \vspace{0.15em}%
+}
+
+\newcommand{\project}[3]{%
+  \needspace{3\baselineskip}%
+  \textbf{#1}\hfill\href{#2}{Project link}\par
+  #3\par\vspace{0.25em}%
+}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries\color{sectionblue} Pouya Parsa}\par
+  \vspace{0.35em}
+  \href{mailto:parsa025@umn.edu}{parsa025@umn.edu}
+  \enspace\textbullet\enspace
+  \href{https://pouya-parsa.github.io}{pouya-parsa.github.io}
+  \enspace\textbullet\enspace
+  \href{https://github.com/pouya-parsa}{github.com/pouya-parsa}
+\end{center}
+
+\vspace{0.25em}
+\textbf{Research Interests:} Vision-Language Models \enspace\textbullet\enspace Memory-Augmented Large Language Models
+
+\section{Education}
+
+\cvheading
+  {Master of Science}
+  {Minneapolis, USA}
+  {University of Minnesota Twin Cities}
+  {2024--2026}
+\begin{itemize}
+  \item GPA: 3.7/4.00; selected coursework: Computer Vision and Generative AI.
+\end{itemize}
+
+\cvheading
+  {Bachelor of Science in Computer Science}
+  {Tehran, Iran}
+  {Amirkabir University of Technology (Tehran Polytechnic)}
+  {2018--2022}
+\begin{itemize}
+  \item GPA: 3.72/4.00; thesis: \textit{Transformer-Based Deep Learning Method for Portfolio Optimization}.
+\end{itemize}
+
+\section{Publications}
+
+\publication
+  {Visual Distribution Anchoring for Efficient Prompt Tuning}
+  {\textbf{Pouya Parsa}, Raoof Zare Moayedi, and Seongjin Choi}
+  {arXiv:2607.28967, July 2026}
+  {https://arxiv.org/abs/2607.28967}
+  {Introduced class-specific visual prototypes from an unlabeled target pool, improving mean frozen vision--language classification accuracy from 65.82\% to 69.21\% without target-side optimization or test-query access.}
+
+\publication
+  {Can the Cloud Drive? Infrastructure Feasibility of Offloading Autonomous Driving Across 5G and 6G}
+  {\textbf{Pouya Parsa}, Kawon Han, and Seongjin Choi}
+  {arXiv:2607.09045, 2026}
+  {https://arxiv.org/abs/2607.09045}
+  {Analyzed cloud offloading for vision--language--action driving models, showing when GPU memory bandwidth remains the bottleneck after 5G/6G uplink constraints are satisfied.}
+
+\publication
+  {Video-based Vehicle Surveillance in the Wild: License Plate, Make, and Model Recognition with Self Reflective Vision-Language Models}
+  {\textbf{Pouya Parsa}, Keya Li, Kara M. Kockelman, and Seongjin Choi}
+  {arXiv:2508.01387; TRB 2026}
+  {https://arxiv.org/abs/2508.01387}
+  {Developed a video vision--language pipeline achieving 91.67\% license-plate and 66.67\% make-and-model top-1 accuracy on smartphone data; self-reflection improved make-and-model results by 5.72\% on average.}
+
+\publication
+  {Where2Start: Leveraging Initial States for Robust and Sample-Efficient Reinforcement Learning}
+  {\textbf{Pouya Parsa}, Raoof Zare Moayedi, Mohammad Bornosi, and Mohammad Mahdi Bejani}
+  {arXiv:2311.15089, 2023}
+  {https://arxiv.org/abs/2311.15089}
+  {Proposed an informative initial-state selection method that achieved up to an 8$\times$ improvement in sample efficiency over reinforcement-learning baselines.}
+
+\section{Experience}
+
+\cvheading
+  {Research Assistant}
+  {Minneapolis, USA}
+  {University of Minnesota; advisor: Dr. Seongjin Choi}
+  {Aug 2024--Present}
+\begin{itemize}
+  \item Conduct research in machine learning with an emphasis on vision--language models, computer vision, and generative AI.
+  \item Develop methods for self-reflective recognition, efficient prompt tuning, and infrastructure-aware autonomous-driving inference.
+\end{itemize}
+
+\cvheading
+  {Project Manager}
+  {Remote (Dubai)}
+  {XTON}
+  {Apr 2024--Jul 2024}
+\begin{itemize}
+  \item Managed infrastructure for a high-availability crypto clicker application serving more than 500,000 users.
+  \item Implemented a serverless architecture using AWS Lambda and auto-scaling and coordinated stakeholder expectations.
+\end{itemize}
+
+\newpage
+\cvheading
+  {Machine Learning Engineer}
+  {Remote (Germany)}
+  {ZebraCat.ai}
+  {Sep 2022--Mar 2023}
+\begin{itemize}
+  \item Developed embedding-based video retrieval and semantic video-segmentation methods.
+  \item Collected a dataset of more than one million advertisement videos.
+\end{itemize}
+
+\cvheading
+  {Data Science Intern}
+  {Tehran, Iran}
+  {MCI (Hamrahe Aval)}
+  {Jul 2022--Sep 2022}
+\begin{itemize}
+  \item Built a fault-tolerant ETL pipeline and collaborative-filtering service for recommender systems at Iran's largest mobile operator, delivering recommendations in under 10 ms.
+\end{itemize}
+
+\cvheading
+  {Machine Learning Engineer Intern}
+  {Zurich, Switzerland}
+  {University of Zurich}
+  {Jan 2022--Mar 2022}
+\begin{itemize}
+  \item Developed interfaces for data ingestion, preprocessing, machine learning, visualization, and report generation.
+\end{itemize}
+
+\section{Honors and Awards}
+
+\cvheading
+  {Departmental Fellowship Award}
+  {2026}
+  {University of Minnesota Twin Cities}
+  {}
+Awarded in recognition of academic excellence and research potential.
+
+\vspace{0.35em}
+\cvheading
+  {CTS TRB Reimbursement Award}
+  {2026}
+  {Center for Transportation Studies}
+  {}
+Received competitive travel reimbursement to present research at TRB 2026.
+
+\vspace{0.35em}
+\cvheading
+  {Outstanding Student Recognition}
+  {}
+  {Amirkabir University of Technology Honors and Olympiads Program}
+  {}
+Recognized for academic excellence; ranked 403rd among approximately 150,000 participants in Iran's national university entrance examination.
+
+\section{Technical Skills}
+
+\textbf{Programming:} Python, Java, C/C++\par
+\textbf{Machine Learning:} PyTorch, TensorFlow, scikit-learn, OpenCV\par
+\textbf{Data:} NumPy, pandas, SQL, NoSQL
+
+\section{Selected Projects}
+
+\project
+  {Heart Rate Measurement from Video}
+  {https://github.com/pouya-parsa/heart_rate_estimation}
+  {Estimated heart rate non-invasively from subtle color changes in facial video.}
+
+\project
+  {Neural-Network Optimizer Comparison}
+  {https://github.com/pouya-parsa/Applied_AI_Projects/blob/main/optimizers.pdf}
+  {Compared particle swarm optimization with Adam for neural-network training.}
+
+\project
+  {Movie Recommender}
+  {https://github.com/pouya-parsa/movie_recommender}
+  {Implemented collaborative filtering with singular value decomposition.}
+
+\section{Teaching and Service}
+
+\textbf{Teaching Assistant:} Computer Vision (Winter 2023); Optimization in Neural Networks (Winter 2023); Artificial Intelligence (Winter 2022).\par
+\textbf{Service:} Board Member, Scientific Association, Amirkabir University of Technology (2020--2021); Member, Khayam--Turing Machine Learning and Data Science Competition Group (2020--2021).
+
+\section{Languages}
+
+\textbf{English:} Fluent (TOEFL iBT 104/120) \quad
+\textbf{Persian:} Native
+
+\end{document}
